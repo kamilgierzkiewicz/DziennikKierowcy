@@ -533,7 +533,7 @@ nav .badge{background:var(--red)}
 #splash .spFoot{width:100%;padding:24px 16px calc(24px + env(safe-area-inset-bottom));text-align:center;font-size:13px;letter-spacing:-.01em;color:#8E8E93;opacity:0;animation:spFadeIn .8s ease 2.5s forwards;border-top:1px solid rgba(0,0,0,.04);box-sizing:border-box}
 #splash .spTitle span{color:#B8851A}
 #splash.dk{background:#0E1417}
-#splash .spD{display:none}#splash.dk .spD{display:block}#splash.dk .spL{display:none}
+#splash .spLogo img.spD{display:none}#splash.dk .spLogo img.spD{display:block}#splash.dk .spLogo img.spL{display:none}
 #splash.dk .spShield,#splash.dk .spProg{stroke:#88A97C}
 #splash.dk .spTrack{stroke:#22302F}
 #splash.dk .spRed{stroke:#C4553A}
@@ -1257,7 +1257,7 @@ const fmtHMs=m=>{m=Math.max(0,Math.round(m));return Math.floor(m/60)+':'+pad(m%6
 const DAYS=['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
 function toLocalInput(ms){const d=new Date(ms);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
 function toast(msg){const t=document.getElementById('toast');t.textContent=tr(msg);t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
-const APP_VER='v1.0.1';
+const APP_VER='v1.0.2';
 const $=id=>document.getElementById(id);
 
 /* ================= I18N ================= */
