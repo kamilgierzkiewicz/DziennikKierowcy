@@ -324,6 +324,14 @@ nav .badge{position:absolute;top:1px;right:calc(50% - 20px);min-width:16px;heigh
 #syncDot:not(.off)+#clock{margin-left:0}
 #ckOvl{position:fixed;inset:0;background:rgba(4,6,10,.84);z-index:61;display:none;align-items:center;justify-content:center;padding:24px}
 #ckOvl.show{display:flex}
+#mapOvl{position:fixed;inset:0;background:rgba(4,6,10,.6);z-index:62;display:none;align-items:flex-end;justify-content:center}
+#mapOvl.show{display:flex}
+#mapBox{background:var(--panel,var(--glass));color:var(--ink);width:100%;max-width:480px;border-radius:22px 22px 0 0;padding:18px 16px calc(16px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.35)}
+#mapBox h3{font-size:1.05rem;margin:0 0 2px;text-align:center}
+#mapBox .mapWhere{font-size:.82rem;color:var(--mut);text-align:center;margin-bottom:14px}
+#mapBox .mapOpt{display:flex;align-items:center;gap:12px;width:100%;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:13px 14px;margin-bottom:8px;font:inherit;font-weight:600;font-size:.98rem;text-align:left}
+#mapBox .mapOpt .mi{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex:none}
+#mapBox .mapCancel{width:100%;background:none;border:0;color:var(--mut);font:inherit;padding:10px;margin-top:2px}
 .ev.restOK{border:2px solid var(--green)!important}
 .ev.bad{border:2px solid var(--red)!important}
 .ev.acked{border:2px dashed var(--amber)!important}
@@ -848,6 +856,16 @@ window.addEventListener('unhandledrejection',function(e){try{
   <button class="ckCancel" id="vClose">Zamknij</button>
 </div></div>
 
+<div id="mapOvl"><div id="mapBox">
+  <h3>Otwórz miejsce postoju w…</h3>
+  <div class="mapWhere" id="mapWhere"></div>
+  <button class="mapOpt" data-map="apple"><span class="mi" style="background:#E8F0FA">🗺️</span>Mapy Apple</button>
+  <button class="mapOpt" data-map="google"><span class="mi" style="background:#E7F4EA">📍</span>Google Maps</button>
+  <button class="mapOpt" data-map="waze"><span class="mi" style="background:#E5F6FD">🚙</span>Waze</button>
+  <button class="mapOpt" data-map="copy"><span class="mi" style="background:var(--panel2)">📋</span>Kopiuj współrzędne <small style="font-weight:400;color:var(--mut)">(np. do nawigacji ciężarowej)</small></button>
+  <button class="mapCancel" id="mapCancel">Anuluj</button>
+</div></div>
+
 <div id="gapOvl"><div id="gapBox">
   <h2>🛏️ Długa przerwa w danych</h2>
   <p id="gapTxt"></p>
@@ -1257,7 +1275,7 @@ const fmtHMs=m=>{m=Math.max(0,Math.round(m));return Math.floor(m/60)+':'+pad(m%6
 const DAYS=['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
 function toLocalInput(ms){const d=new Date(ms);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
 function toast(msg){const t=document.getElementById('toast');t.textContent=tr(msg);t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
-const APP_VER='v1.0.4';
+const APP_VER='v1.1.0';
 const $=id=>document.getElementById(id);
 
 /* ================= I18N ================= */
@@ -1745,6 +1763,7 @@ const TR_PAIRS=[
 ["Synchronizacja urządzeń","Device sync"],["Połącz i synchronizuj","Connect & sync"],["Synchronizuj teraz","Sync now"],
 ["Odłącz to urządzenie","Disconnect this device"],["Ostatnia synchronizacja: ","Last sync: "],["Jeszcze nie zsynchronizowano.","Not synced yet."],
 ["Repo (login/nazwa)","Repo (login/name)"],["Token GitHub","GitHub token"],
+["Otwórz miejsce postoju w…","Open stop location in…"],["Mapy Apple","Apple Maps"],["Kopiuj współrzędne","Copy coordinates"],["(np. do nawigacji ciężarowej)","(e.g. for truck navigation)"],
 ];
 TR_PAIRS.sort((a,b)=>b[0].length-a[0].length);
 function tr(s){ if(LANG!=='en'||!s) return s; for(const p of TR_PAIRS) s=s.split(p[0]).join(p[1]); return s; }
@@ -2177,13 +2196,13 @@ function renderLog(){
       <div class="ic" style="color:${TYPES[e.type].color};background:var(--panel2)">${ICONS[e.type]}</div>
       <div class="mid"><div class="tt">${TYPES[e.type].name}${e.end?'':' <span style="color:var(--green)">• trwa</span>'}</div>
       <div class="sub">${fmtClock(e.start)} – ${e.end?fmtClock(e.end):'…'}${brTag[e.id]?`<span class="brTag br${brTag[e.id][0]}">${brTag[e.id][1]}</span>`:''}${restOK?`<span class="restTag">${(lastR&&lastR.weeklyRests.some(w=>e.start>=w.start&&e.start<w.end))?'tygodniowy':(dur>=L.WEEKLY_REST_RED?'dobowy wydłużony':'dobowy')} ✓</span>`:''}</div>
-      ${e.note?`<div class="note">📝 ${e.note}</div>`:''}${(e.type==='rest'&&e.loc&&dur>=STOPLOC_MIN)?`<div class="locL">📍 <a href="${mapUrl(e.loc)}" target="_blank" rel="noopener">${ckEsc(e.place||(e.loc.lat.toFixed(4)+', '+e.loc.lon.toFixed(4)))}</a></div>`:''}</div>
+      ${e.note?`<div class="note">📝 ${e.note}</div>`:''}${(e.type==='rest'&&e.loc&&dur>=STOPLOC_MIN)?`<div class="locL">📍 <a href="${mapUrl(e.loc)}" data-lat="${e.loc.lat}" data-lon="${e.loc.lon}">${ckEsc(e.place||(e.loc.lat.toFixed(4)+', '+e.loc.lon.toFixed(4)))}</a></div>`:''}</div>
       <div class="dur mono">${fmtHMs(dur)}</div>${vHtml}</div>`;
   }
   $('logList').innerHTML=tr(html);
   document.querySelectorAll('.ev').forEach(el=>el.onclick=()=>openModal(el.dataset.id));
   document.querySelectorAll('.evV button').forEach(b=>b.onclick=ev=>{ ev.stopPropagation(); openViol(b.dataset.vk); });
-  document.querySelectorAll('.locL a').forEach(a=>a.onclick=ev=>ev.stopPropagation());
+  document.querySelectorAll('.locL a').forEach(a=>a.onclick=ev=>{ ev.preventDefault(); ev.stopPropagation(); openMapPick(+a.dataset.lat,+a.dataset.lon,a.textContent); });
 }
 
 /* ================= RENDER: ANALIZA ================= */
@@ -2302,6 +2321,18 @@ async function geoFill(){                                  // nadrabia nazwy mie
   if(geoBusy||!navigator.onLine) return; geoBusy=true;
   try{ const todo=state.events.filter(e=>e.loc&&!e.place).slice(-15);
     for(const e of todo){ await geoName(e); await new Promise(r=>setTimeout(r,1200)); } }finally{ geoBusy=false; }
+}
+let mapPick=null;
+function openMapPick(lat,lon,label){ mapPick={lat,lon}; $('mapWhere').textContent=label||(lat.toFixed(4)+', '+lon.toFixed(4)); $('mapOvl').classList.add('show'); }
+function mapGo(kind){
+  if(!mapPick) return; const {lat,lon}=mapPick, ll=lat+','+lon;
+  $('mapOvl').classList.remove('show');
+  if(kind==='copy'){ const t=lat.toFixed(5)+', '+lon.toFixed(5);
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Skopiowano: '+t)).catch(()=>toast(t)); return; }
+  const url = kind==='apple' ? 'https://maps.apple.com/?q='+ll+'&ll='+ll
+            : kind==='google' ? 'https://www.google.com/maps/search/?api=1&query='+ll
+            : 'https://waze.com/ul?ll='+ll+'&navigate=yes';
+  window.open(url,'_blank');
 }
 function mapUrl(l){ return /iPhone|iPad|Macintosh/.test(navigator.userAgent)
   ? 'https://maps.apple.com/?q='+l.lat+','+l.lon : 'https://www.google.com/maps?q='+l.lat+','+l.lon; }
@@ -3416,6 +3447,9 @@ if(state.settings.gpsAuto===true) setTimeout(gpsStart, 800);
 $('endDayBtn').onclick=()=>runChecklist('end',()=>{ startAct('rest'); state.settings.dayLocked=true; save(); renderAll(); });
 $('startDayBtn').onclick=()=>runChecklist('start',()=>{ state.settings.dayLocked=false; startAct('work'); });
 $('ckYes').onclick=ckNext;
+document.querySelectorAll('#mapBox .mapOpt').forEach(b=>b.onclick=()=>mapGo(b.dataset.map));
+$('mapCancel').onclick=()=>$('mapOvl').classList.remove('show');
+$('mapOvl').onclick=e=>{ if(e.target.id==='mapOvl') $('mapOvl').classList.remove('show'); };
 $('syncConnect').onclick=async()=>{
   const repo=$('syncRepoIn').value.trim().replace(/^https?:\/\/github\.com\//,'').replace(/\.git$/,'').replace(/\/$/,''), token=$('syncTokenIn').value.trim();
   if(!/^[\w.-]+\/[\w.-]+$/.test(repo)){ toast('Podaj repo w formacie login/nazwa'); return; }
