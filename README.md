@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icon-512.png" width="96" alt="Dziennik Kierowcy">
+  <img src="DziennikKierowcy-512.png" width="96" alt="Dziennik Kierowcy">
 </p>
 
 <h1 align="center">Dziennik Kierowcy</h1>
