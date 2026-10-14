@@ -1,5 +1,5 @@
 /* Dziennik Kierowcy — service worker: online zawsze świeża wersja z GitHuba, offline kopia z pamięci */
-const CACHE = 'dziennik-v1.0.2';
+const CACHE = 'dziennik-v1.0.3';
 const FILES = ['./DziennikKierowcy.html', './manifest.json', './DziennikKierowcy-192.png', './DziennikKierowcy-512.png', './DziennikKierowcy-maskable-512.png', './DziennikKierowcy-apple-touch.png', './DziennikKierowcy-apple-touch-dark.png'];
 
 self.addEventListener('install', e => {
