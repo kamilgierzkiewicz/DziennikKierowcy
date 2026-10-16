@@ -486,6 +486,14 @@ header h1{font-size:1.2rem;font-weight:700}
 .art12btn{background:color-mix(in srgb,var(--c-out) 12%,var(--panel));color:var(--ink);border:1px solid color-mix(in srgb,var(--c-out) 55%,transparent);border-radius:var(--rad);box-shadow:none}
 .art12btn.on{background:color-mix(in srgb,var(--c-out) 24%,var(--panel));border-color:var(--c-out);outline:none}
 #extBtn{box-shadow:none;border-color:transparent;color:#15201F}
+#dial .bzGlow,#dial .bzFlow{opacity:0}
+#dial.fx-pulse .bzGlow,#dial.fx-both .bzGlow{animation:bzPul 3s ease-in-out infinite}
+#dial.fx-both .bzGlow.bz-r{animation:bzPulR 1.6s ease-in-out infinite}
+#dial.fx-flow .bzF1,#dial.fx-both .bzF1{opacity:.8}
+#dial.fx-flow .bzF2,#dial.fx-both .bzF2{opacity:1}
+@keyframes bzPul{0%,100%{opacity:.15}50%{opacity:.75}}
+@keyframes bzPulR{0%,100%{opacity:.25}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){#dial .bzGlow{animation:none!important;opacity:.4}}
 #extBtn.g{background:var(--arc-g)} #extBtn.o{background:var(--arc-o)} #extBtn.r{background:var(--arc-r);color:#FFF}
 #extBtn.onx{outline:2px solid var(--ink);outline-offset:2px}
 .askrow button{background:var(--amber);box-shadow:none}
@@ -756,6 +764,13 @@ window.addEventListener('unhandledrejection',function(e){try{
       <button data-th="auto"><span class="t">Auto</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">wg telefonu</small></button>
       <button data-th="dark"><span class="t">Ciemny</span></button>
       <button data-th="light"><span class="t">Jasny</span></button>
+    </div>
+    <div class="lbl" style="margin:12px 0 6px">Efekt tarczy</div>
+    <div class="seg" id="fxSeg" style="grid-template-columns:repeat(4,1fr)">
+      <button data-fx="none"><span class="t">Brak</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">statyczna</small></button>
+      <button data-fx="pulse"><span class="t">Puls</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">poświata</small></button>
+      <button data-fx="flow"><span class="t">Pływanie</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">refleks</small></button>
+      <button data-fx="both"><span class="t">Oba</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">puls + refleks</small></button>
     </div>
   </div>
   <div class="card">
@@ -1275,7 +1290,7 @@ const fmtHMs=m=>{m=Math.max(0,Math.round(m));return Math.floor(m/60)+':'+pad(m%6
 const DAYS=['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
 function toLocalInput(ms){const d=new Date(ms);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
 function toast(msg){const t=document.getElementById('toast');t.textContent=tr(msg);t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
-const APP_VER='v1.1.1';
+const APP_VER='v1.2.0';
 const $=id=>document.getElementById(id);
 
 /* ================= I18N ================= */
@@ -1501,7 +1516,7 @@ const TR_PAIRS=[
 ["Wygląd","Appearance"],
 ["Język / Language","Language / Język"],
 ["wg telefonu","follows phone"],
-["Ciemny","Dark"],
+["Ciemny","Dark"],["Efekt tarczy","Dial effect"],['<span class="t">Brak</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">statyczna','<span class="t">None</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">static'],["statyczna","static"],[">Puls<",">Pulse<"],["poświata","glow"],[">Pływanie<",">Flow<"],["refleks","shine"],[">Oba<",">Both<"],["puls + refleks","pulse + shine"],
 ["Jasny","Light"],
 ["Styl licznika","Dial style"],
 ["Model odpowiedzi","Answer model"],
@@ -1794,10 +1809,12 @@ function buildDial(){
     t+=`<text x="${(100+63*Math.cos(a)).toFixed(1)}" y="${(100+63*Math.sin(a)+2.7).toFixed(1)}" text-anchor="middle" font-size="7.5" font-weight="700" style="fill:var(--mut);font-family:var(--sans)">${h}h</text>`; }
   const ap=(m0,m1,r)=>{ const a0=(m0/270*360-90)*Math.PI/180, a1=(m1/270*360-90)*Math.PI/180, lg=(m1-m0)/270*360>180?1:0;
     return `M${(100+r*Math.cos(a0)).toFixed(2)} ${(100+r*Math.sin(a0)).toFixed(2)} A${r} ${r} 0 ${lg} 1 ${(100+r*Math.cos(a1)).toFixed(2)} ${(100+r*Math.sin(a1)).toFixed(2)}`; };
-  const band=`<circle cx="100" cy="100" r="97" fill="none" style="stroke:var(--track)" stroke-width="1.2"/>
-   <path d="${ap(0,210,97)}" fill="none" style="stroke:var(--arc-g)" stroke-width="2.4" opacity=".6"/>
-   <path d="${ap(211,241,97)}" fill="none" style="stroke:var(--arc-o)" stroke-width="2.4"/>
-   <path d="${ap(242,269.6,97)}" fill="none" style="stroke:var(--arc-r)" stroke-width="2.4"/>`;
+  const ZB=[[0,210,'g'],[211,241,'o'],[242,269.6,'r']];
+  const band=`<circle cx="100" cy="100" r="97" fill="none" style="stroke:var(--track)" stroke-width="2"/>`
+   +ZB.map(([a,b,c])=>`<path class="bzGlow bz-${c}" d="${ap(a,b,97)}" fill="none" style="stroke:var(--arc-${c})" stroke-width="6.6" stroke-linecap="round" filter="url(#dBzBl)"/>`).join('')
+   +ZB.map(([a,b,c])=>`<path d="${ap(a,b,97)}" fill="none" style="stroke:var(--arc-${c})" stroke-width="3.6" stroke-linecap="round"${c==='g'?' opacity=".8"':''}/>`).join('')
+   +`<path class="bzFlow bzF1" d="${ap(0,269.6,97)}" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" filter="url(#dBzBl)"/>`
+   +`<path class="bzFlow bzF2" d="${ap(0,269.6,97)}" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>`;
   const za=230*Math.PI/180, zb=270*Math.PI/180;
   const z1=(100+86.5*Math.cos(za)).toFixed(1)+' '+(100+86.5*Math.sin(za)).toFixed(1);
   const z2=(100+86.5*Math.cos(zb)).toFixed(1)+' '+(100+86.5*Math.sin(zb)).toFixed(1);
@@ -1823,6 +1840,7 @@ function buildDial(){
     <radialGradient id="dBall" cx="35%" cy="30%" r="80%">
       <stop offset="0%" stop-color="#FFFFFF"/><stop offset="70%" stop-color="#E6ECF4"/><stop offset="100%" stop-color="#B9C4D4"/>
     </radialGradient>
+    <filter id="dBzBl" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.6"/></filter>
     <filter id="dGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
     <filter id="dSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.2"/></filter>
     <filter id="dSpec" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
@@ -1846,6 +1864,25 @@ function buildDial(){
      <circle id="dialTipHalo" r="8.5" style="fill:var(--arc-g)" opacity=".3"/>
      <circle id="dialTipDot" r="5" style="fill:var(--panel);stroke:var(--arc-g)" stroke-width="2.6"/>
    </g>`;
+  applyDialFx();
+}
+/* v1.2.0: efekt paska stref — brak / puls / pływanie / oba */
+let fxRaf=0, fxT0=null;
+function applyDialFx(){
+  const fx=(state.settings&&state.settings.dialFx)||'both', d=$('dial'); if(!d) return;
+  d.classList.remove('fx-none','fx-pulse','fx-flow','fx-both'); d.classList.add('fx-'+fx);
+  const fl=[...d.querySelectorAll('.bzFlow')];
+  if(fxRaf){ cancelAnimationFrame(fxRaf); fxRaf=0; }
+  if(!fl.length || (fx!=='flow'&&fx!=='both')) return;
+  const L=fl[0].getTotalLength(), S=44, red=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+  fl.forEach(e=>e.style.strokeDasharray=S+' '+(L+S));
+  const step=t=>{
+    if(fxT0===null) fxT0=t;
+    const k=((t-fxT0)/4200)%1;
+    fl.forEach(e=>e.style.strokeDashoffset=(S-k*(L+S)).toFixed(1));
+    fxRaf=(red&&red.matches)?0:requestAnimationFrame(step);
+  };
+  fxRaf=requestAnimationFrame(step);
 }
 function setDial(mins){
   const frac=Math.min(1,mins/L.CONT_DRIVE), over=mins>L.CONT_DRIVE;
@@ -2724,7 +2761,7 @@ function ckNext(){
 }
 /* ================= SYNCHRONIZACJA: PRYWATNE REPO GITHUB ================= */
 const SYNC_KEY='dziennikKierowcy.sync';
-const CFG_SYNC=['violAck','ckBase','dayLocked','extDecl','art12','nightStart','international','checklists','stopLoc'];  // reszta ustawień zostaje na urządzeniu (GPS, alarmy, motyw, klucz AI)
+const CFG_SYNC=['violAck','ckBase','dayLocked','extDecl','art12','nightStart','international','checklists','stopLoc','dialFx'];  // reszta ustawień zostaje na urządzeniu (GPS, alarmy, motyw, klucz AI)
 let SY=null; try{ SY=JSON.parse(localStorage.getItem(SYNC_KEY)); }catch(e){}
 let syncing=false, syncAgain=false, syncTimer=null, lastPullAt=0, syncState='off';
 const SCOLS=['events'];
@@ -2732,7 +2769,7 @@ const sItems=()=>state.events;
 const hstr=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)};
 const hItem=x=>{const {upd,...y}=x;return hstr(JSON.stringify(y))};
 const cfgOf=()=>{const o={};CFG_SYNC.forEach(k=>{if(state.settings[k]!==undefined)o[k]=state.settings[k]});return o};
-function applyCfg(c){ if(!c) return; CFG_SYNC.forEach(k=>{ if(k in c) state.settings[k]=c[k]; else delete state.settings[k]; }); }
+function applyCfg(c){ if(!c) return; CFG_SYNC.forEach(k=>{ if(k in c) state.settings[k]=c[k]; else delete state.settings[k]; }); if(typeof applyDialFx==='function') applyDialFx(); }
 function setDot(st){ syncState=st; const d=$('syncDot'); if(!d) return; d.className=st; d.title={off:'',ok:'Zsynchronizowano',busy:'Synchronizuję…',err:'Błąd synchronizacji',offline:'Brak internetu'}[st]||''; }
 function b64utf8(s){const b=new TextEncoder().encode(s);let bin='';for(let i=0;i<b.length;i+=0x8000)bin+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(bin)}
 function utf8b64(b64){const bin=atob(b64.replace(/\s/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new TextDecoder().decode(u)}
@@ -3308,6 +3345,8 @@ function renderBackupStats(){
   if($('ckAddr') && document.activeElement!==$('ckAddr')) $('ckAddr').value=(state.settings.ckBase&&state.settings.ckBase.addr)||'Jaskółek 20f, 43-215 Studzienice';
   const thm=(state.settings&&state.settings.theme)||'auto';
   document.querySelectorAll('#themeSeg button').forEach(b=>b.classList.toggle('sel',b.dataset.th===thm));
+  const dfx=(state.settings&&state.settings.dialFx)||'both';
+  document.querySelectorAll('#fxSeg button').forEach(b=>b.classList.toggle('sel',b.dataset.fx===dfx));
   const am=(state.settings&&state.settings.aiModelMode)||'top';
   document.querySelectorAll('#aiSeg button').forEach(b=>b.classList.toggle('sel',b.dataset.am===am));
   const lg=(state.settings&&state.settings.lang)||'pl';
@@ -3424,6 +3463,10 @@ document.querySelectorAll('.sw[data-alarm]').forEach(s=>s.onclick=()=>{
 });
 document.querySelectorAll('#themeSeg button').forEach(b=>b.onclick=()=>{
   state.settings.theme=b.dataset.th; save(); applyTheme(); renderBackupStats();
+});
+document.querySelectorAll('#fxSeg button').forEach(b=>b.onclick=()=>{
+  state.settings.dialFx=b.dataset.fx; save(); applyDialFx();
+  document.querySelectorAll('#fxSeg button').forEach(x=>x.classList.toggle('sel',x===b));
 });
 $('gapYes').onclick=()=>{
   const ev=[...state.events].sort((a,b)=>a.start-b.start);
