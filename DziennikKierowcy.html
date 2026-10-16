@@ -1275,7 +1275,7 @@ const fmtHMs=m=>{m=Math.max(0,Math.round(m));return Math.floor(m/60)+':'+pad(m%6
 const DAYS=['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
 function toLocalInput(ms){const d=new Date(ms);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
 function toast(msg){const t=document.getElementById('toast');t.textContent=tr(msg);t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
-const APP_VER='v1.1.0';
+const APP_VER='v1.1.1';
 const $=id=>document.getElementById(id);
 
 /* ================= I18N ================= */
@@ -1376,6 +1376,7 @@ const TR_PAIRS=[
 [" — przerwę zacznij najpóźniej o <b>"," — start your break no later than <b>"],
 ["(15 min zaliczone → wystarczy 30)","(15 min banked → 30 is enough)"],
 ["licznik czysty — pełne <b>4:30</b> jazdy do dyspozycji","counter clean — a full <b>4:30</b> of driving available"],
+[" po przerwie (limit 10h: "," after the break (10h limit: "],
 ["Trwa: <b>","Now: <b>"],
 // — dziennik / analiza —
 ["jazda ","driving "],
@@ -1968,7 +1969,14 @@ function renderToday(R,now){
       // +1h kusimy TYLKO gdy okno faktycznie da wykorzystać tę godzinę
       $('contHint').innerHTML=tr(`możesz jechać jeszcze <b>${fmtHMs(dayLeft)}</b> do limitu 9h — <b>＋1h</b> przy tarczy podniesie do 10h`);
     } else if(R.contDrive>0){
-      $('contHint').innerHTML=tr(`możesz jechać jeszcze <b>${fmtHMs(contLeft)}</b> — przerwę zacznij najpóźniej o <b>${fmtClock(R.breakDeadline)}</b>`+(R.partial15?` <span style="color:var(--green)">(15 min zaliczone → wystarczy 30)</span>`:''));
+      // v1.1.1: po wydłużeniu +1h pokaż, ile jazdy zostanie po przerwie
+      let afterBr=0;
+      if(R.extDeclared && dayLeft>contLeft){
+        afterBr=Math.min(dayLeft-contLeft, winLeft-contLeft-45, nightLeft===Infinity?Infinity:nightLeft-contLeft);
+        afterBr=Math.max(0,Math.floor(afterBr));
+      }
+      $('contHint').innerHTML=tr(`możesz jechać jeszcze <b>${fmtHMs(contLeft)}</b> — przerwę zacznij najpóźniej o <b>${fmtClock(R.breakDeadline)}</b>`+(R.partial15?` <span style="color:var(--green)">(15 min zaliczone → wystarczy 30)</span>`:''))
+        +(afterBr>0?'<br><span style="color:var(--green)">'+tr(`＋ <b>${fmtHMs(afterBr)}</b> po przerwie (limit 10h: ${fmtHMs(R.dayDrive)} / ${fmtHMs(R.dayDriveLimit)})`)+'</span>':'');
     } else {
       $('contHint').innerHTML=tr(`licznik czysty — pełne <b>4:30</b> jazdy do dyspozycji`);
     }
