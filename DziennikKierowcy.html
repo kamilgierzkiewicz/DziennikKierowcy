@@ -746,6 +746,16 @@ window.addEventListener('unhandledrejection',function(e){try{
     </div>
   </div>
   <div class="card">
+    <h3>Kopia zapasowa</h3>
+    <p class="hint-inline" style="margin:0 0 12px">Dane zapisują się automatycznie w pamięci tej przeglądarki (localStorage). Regularnie eksportuj plik JSON — to Twoje pełne archiwum, tak jak w aplikacji treningowej.</p>
+    <button class="btn" id="expBtn">⬇ Eksportuj dane (JSON)</button>
+    <button class="btn ghost" id="impBtn">⬆ Importuj z pliku…</button>
+    <input type="file" id="impFile" accept="application/json" style="display:none">
+    <div class="chk" style="margin-top:10px"><input type="checkbox" id="impMerge"><label for="impMerge">Scal z obecnymi danymi (bez zaznaczenia: zastąpi wszystko)</label></div>
+    <div class="row" style="margin-top:10px"><span class="k">Wpisów w bazie</span><span class="v" id="statCount">0</span></div>
+    <div class="row"><span class="k">Zakres danych</span><span class="v" id="statRange">—</span></div>
+  </div>
+  <div class="card">
     <h3>Checklisty dnia</h3>
     <p class="hint-inline" style="margin:0 0 6px">Przed <b>Rozpocznij dzień</b> i <b>Zakończ dzień</b> — pytania krok po kroku. Pytania o kartę, wpis manualny, wydruk, OUT i zczytanie karty pojawiają się <b>tylko na bazie</b>, a o łóżko na tachografie — <b>tylko w trasie</b> (w promieniu 500 m od bazy wg GPS; brak lokalizacji = pytanie „na bazie / w trasie”).</p>
     <div class="switch"><div class="txt">Checklisty włączone <small>delikatny sygnał przy każdym pytaniu</small></div><div class="sw" data-ck></div></div>
@@ -772,12 +782,7 @@ window.addEventListener('unhandledrejection',function(e){try{
   </div>
   <div class="card">
     <h3>Wygląd</h3>
-    <div class="lbl" style="margin:2px 0 6px">Język / Language</div>
-    <div class="seg" id="langSeg" style="grid-template-columns:repeat(2,1fr)">
-      <button data-lg="pl"><span class="t">Polski</span></button>
-      <button data-lg="en"><span class="t">English</span></button>
-    </div>
-    <div class="lbl" style="margin:12px 0 6px">Motyw</div>
+    <div class="lbl" style="margin:2px 0 6px">Motyw</div>
     <div class="seg" id="themeSeg" style="grid-template-columns:repeat(3,1fr)">
       <button data-th="auto"><span class="t">Auto</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">wg telefonu</small></button>
       <button data-th="dark"><span class="t">Ciemny</span></button>
@@ -802,28 +807,15 @@ window.addEventListener('unhandledrejection',function(e){try{
     </div>
     <p class="hint-inline" style="margin:8px 0 0">„Najwyższy" sam wykrywa czołowy model dostępny na Twoim kluczu (Opus &gt; Sonnet &gt; Haiku, najnowsza wersja). Uwaga: Opus potrafi kosztować kilkadziesiąt razy więcej niż Haiku.</p>
   </div>
+  <div class="card" style="border-color:#4A2430">
+    <h3 style="color:var(--red)">Strefa ryzyka</h3>
+    <button class="btn danger" id="wipeBtn">Usuń wszystkie dane</button>
+  </div>
   <div class="hint-inline" style="text-align:center;opacity:.55;margin:14px 0 4px">Dziennik Kierowcy · <span id="appVer"></span></div>
   <a class="btn ghost" id="contactBtn" href="mailto:kamilgierzkiewicz@icloud.com" style="display:block;text-align:center;text-decoration:none;margin:6px 0 8px">✉️ Napisz do autora</a>
   <div class="hint-inline" style="text-align:center;opacity:.55;margin:0 0 10px;font-size:.75rem">© 2026 Kamil Gierzkiewicz (MVT). Wszelkie prawa zastrzeżone.</div>
 </section>
 
-<!-- ============ BACKUP ============ -->
-<section id="tab-backup" class="tab">
-  <div class="card">
-    <h3>Kopia zapasowa</h3>
-    <p class="hint-inline" style="margin:0 0 12px">Dane zapisują się automatycznie w pamięci tej przeglądarki (localStorage). Regularnie eksportuj plik JSON — to Twoje pełne archiwum, tak jak w aplikacji treningowej.</p>
-    <button class="btn" id="expBtn">⬇ Eksportuj dane (JSON)</button>
-    <button class="btn ghost" id="impBtn">⬆ Importuj z pliku…</button>
-    <input type="file" id="impFile" accept="application/json" style="display:none">
-    <div class="chk" style="margin-top:10px"><input type="checkbox" id="impMerge"><label for="impMerge">Scal z obecnymi danymi (bez zaznaczenia: zastąpi wszystko)</label></div>
-    <div class="row" style="margin-top:10px"><span class="k">Wpisów w bazie</span><span class="v" id="statCount">0</span></div>
-    <div class="row"><span class="k">Zakres danych</span><span class="v" id="statRange">—</span></div>
-  </div>
-  <div class="card" style="border-color:#4A2430">
-    <h3 style="color:var(--red)">Strefa ryzyka</h3>
-    <button class="btn danger" id="wipeBtn">Usuń wszystkie dane</button>
-  </div>
-</section>
 
 </main>
 
@@ -834,7 +826,6 @@ window.addEventListener('unhandledrejection',function(e){try{
   <button data-tab="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.8c4.9 0 8.6 3.1 8.6 7.2s-3.7 7.2-8.6 7.2c-.9 0-1.8-.1-2.6-.3L5 20l1-3.3c-1.6-1.3-2.6-3.1-2.6-5.7 0-4.1 3.7-7.2 8.6-7.2z"/><path d="M8.4 11h.01M12 11h.01M15.6 11h.01" stroke-width="2.2"/></svg>Pytaj</button>
   <button data-tab="guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 19.2V6a2.4 2.4 0 0 1 2.4-2.4h11.2v13.2H7.2a2.4 2.4 0 0 0-2.4 2.4z"/><path d="M4.8 19.2a2.4 2.4 0 0 0 2.4 2.4h11.2v-4.8"/></svg>Poradnik</button>
   <button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Ustawienia</button>
-  <button data-tab="backup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4v10.2m0 0 3.5-3.5M12 13.6 8.5 10.1"/><path d="M8.3 7.3H7a2.2 2.2 0 0 0-2.2 2.2v9A2.2 2.2 0 0 0 7 20.7h10a2.2 2.2 0 0 0 2.2-2.2v-9A2.2 2.2 0 0 0 17 7.3h-1.3"/></svg>Backup</button>
 </nav>
 
 <div id="ovl"><div id="modal">
@@ -1308,500 +1299,12 @@ const fmtHMs=m=>{m=Math.max(0,Math.round(m));return Math.floor(m/60)+':'+pad(m%6
 const DAYS=['niedziela','poniedziałek','wtorek','środa','czwartek','piątek','sobota'];
 function toLocalInput(ms){const d=new Date(ms);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
 function toast(msg){const t=document.getElementById('toast');t.textContent=tr(msg);t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
-const APP_VER='v1.2.1';
+const APP_VER='v1.2.3';
 const $=id=>document.getElementById(id);
 
 /* ================= I18N ================= */
 let LANG='pl';
-const TR_PAIRS=[
-// — długie zdania / akapity statyczne —
-["Wpisuj tylko aktywności — <b>luki między wpisami aplikacja traktuje jako odpoczynek</b> (nocy i weekendów nie musisz wpisywać). Dotknij wpis, aby go edytować.","Log activities only — <b>gaps between entries are treated as rest</b> (no need to log nights and weekends). Tap an entry to edit it."],
-["Dane zapisują się automatycznie w pamięci tej przeglądarki (localStorage). Regularnie eksportuj plik JSON — to Twoje pełne archiwum, tak jak w aplikacji treningowej.","Data is saved automatically in this browser's storage (localStorage). Export the JSON file regularly — it is your full archive."],
-["Scal z obecnymi danymi (bez zaznaczenia: zastąpi wszystko)","Merge with current data (unchecked: replaces everything)"],
-["Dopuszcza 2 skrócone odpoczynki tygodniowe z rzędu (poza krajem bazy) — zamiast naruszenia pokaże ostrzeżenie z warunkami.","Allows 2 consecutive reduced weekly rests (outside the base country) — shows a warning with conditions instead of a violation."],
-["Pora nocna — 4 h dla limitu 10 h pracy (art. 21)","Night time — the 4 h window for the 10 h work cap (art. 21)"],
-["Progi dotyczą obu liczników: 4:30 jazdy ciągłej i 6:00 pracy ciągłej. Działają, gdy aplikacja jest na ekranie.","Thresholds apply to both counters: 4:30 continuous driving and 6:00 continuous work. They fire while the app is on screen."],
-["czerwony alarm „PRZERWA — TERAZ!\"","red \"BREAK — NOW!\" alarm"],
-["30 min przed limitem","30 min before the limit"],
-["15 min przed limitem","15 min before the limit"],
-["5 min przed limitem","5 min before the limit"],
-["Limit osiągnięty","Limit reached"],
-["Alarmy 6 h pracy","6 h work alarms"],
-["te same progi (30/15/5/0) dla limitu pracy z ustawy PL","same thresholds (30/15/5/0) for the Polish 6 h work limit"],
-["Wklej własny klucz Anthropic API, a pytania spoza bazy offline przejmie Claude (tylko tematy: tachograf i 561/2006). Klucz zostaje wyłącznie w pamięci tej przeglądarki. Zapytanie kosztuje ułamek grosza (model Haiku).","Paste your own Anthropic API key and questions outside the offline base will be handled by Claude (tachograph & 561/2006 topics only). The key never leaves this browser. A query costs a fraction of a cent (Haiku model)."],
-["„Najwyższy\" sam wykrywa czołowy model dostępny na Twoim kluczu (Opus &gt; Sonnet &gt; Haiku, najnowsza wersja). Uwaga: Opus potrafi kosztować kilkadziesiąt razy więcej niż Haiku.","\"Top\" auto-detects the best model available on your key (Opus &gt; Sonnet &gt; Haiku, newest version). Note: Opus can cost tens of times more than Haiku."],
-["<b>iPhone:</b> Safari → <kbd>Udostępnij</kbd> → <kbd>Do ekranu początkowego</kbd>. <b>Android:</b> Chrome → <kbd>⋮</kbd> → <kbd>Zainstaluj aplikację</kbd> (lub „Dodaj do ekranu głównego\"). Dzięki plikom <code>manifest.json</code> i <code>sw.js</code> z repo obie platformy działają pełnoekranowo i offline.","<b>iPhone:</b> Safari → <kbd>Share</kbd> → <kbd>Add to Home Screen</kbd>. <b>Android:</b> Chrome → <kbd>⋮</kbd> → <kbd>Install app</kbd>. Thanks to <code>manifest.json</code> and <code>sw.js</code> in the repo, both platforms run full-screen and offline."],
-["Pytaj o rozp. 561/2006, obsługę tachografu i czas pracy — także o <b>Twoją bieżącą sytuację</b> (asystent widzi liczniki). Baza działa offline; pytania spoza niej może przejąć Claude, jeśli podasz klucz API w Ustawieniach.","Ask about Reg. 561/2006, tachograph use and driving time — including <b>your current situation</b> (the assistant sees your counters). The base works offline; other questions can be handled by Claude if you add an API key in Settings."],
-["np. ile mogę dziś jeszcze jechać?","e.g. how much can I still drive today?"],
-["Nie mam tego w bazie offline. Sprawdź sekcje <b>Poradnika</b> albo włącz tryb AI: w zakładce <b>Ustawienia</b> wklej klucz Anthropic API — wtedy takie pytania przejmie Claude (tylko tematy tachograf/561).","Not in my offline base. Check the <b>Guide</b> sections or enable AI mode: paste an Anthropic API key in <b>Settings</b> — Claude will handle such questions (tachograph/561 topics only)."],
-["Usunąć ten wpis?","Delete this entry?"],
-["Na pewno usunąć WSZYSTKIE dane? Najpierw zrób eksport!","Really delete ALL data? Export first!"],
-["Ostatnie ostrzeżenie — operacja nieodwracalna.","Last warning — this cannot be undone."],
-["Brak wpisów. Użyj przycisków na zakładce „Dziś\" albo dodaj wpis ręcznie.","No entries yet. Use the buttons on the \"Today\" tab or add an entry manually."],
-["Analiza pojawi się po dodaniu pierwszych wpisów.","Analysis will appear after you add your first entries."],
-["Notatka (np. odstępstwo art. 12, prom)","Note (e.g. art. 12 derogation, ferry)"],
-["Trwa nadal (bez końca)","Still ongoing (no end)"],
-["Rodzaj aktywności","Activity type"],
-["Wpisów w bazie","Entries in database"],
-["Zakres danych","Data range"],
-["Minęło <b>6 h pracy</b> (jazda + inna praca) bez wymaganej przerwy. Odpocznij <b>≥30 min</b> — pełna przerwa 45 z tachografu też załatwia sprawę.","<b>6 h of work</b> (driving + other work) has passed without the required break. Rest <b>≥30 min</b> — the full 45-min tachograph break covers it too."],
-["Limit <b>4:30</b> jazdy ciągłej osiągnięty. Zatrzymaj się przy najbliższej okazji i ustaw odpoczynek — <b>45 min</b> (lub 30, jeśli masz zaliczone 15).","The <b>4:30</b> continuous-driving limit is reached. Stop at the first opportunity and take a rest — <b>45 min</b> (or 30 if you already banked 15)."],
-["Zbliżasz się do <b>6 h pracy</b> łącznie (jazda + inna praca).<br>Przerwę ≥30 min zacznij najpóźniej o <b>","You are approaching <b>6 h of work</b> in total (driving + other work).<br>Start a ≥30 min break no later than <b>"],
-["Zbliżasz się do limitu 4:30 jazdy ciągłej.<br>Przerwę zacznij najpóźniej o <b>","You are approaching the 4:30 continuous-driving limit.<br>Start your break no later than <b>"],
-["PRZERWA W PRACY — TERAZ!","WORK BREAK — NOW!"],
-["PRZERWA — TERAZ!","BREAK — NOW!"],
-["Przerwa w pracy za ","Work break in "],
-["Przerwa za ","Break in "],
-["OK, przyjąłem","OK, got it"],
-// — karty asystenta —
-["Przerwa w pracy — reguła 6 h","Work break — the 6 h rule"],
-["jazda + inna praca bez przerwy","driving + other work without a break"],
-["Dokończ przerwę (jeszcze ≥15 min) do","Finish the break (≥15 min more) by"],
-["Przerwę ≥30 min (lub 15+15) zacznij do","Start a ≥30 min break (or 15+15) by"],
-["Przerwy ≥15 min w tej dniówce","Breaks ≥15 min in this shift"],
-[" / wym. 45"," / req. 45"],
-["Pora nocna ","Night time "],
-["dotyczy → limit pracy 10h (","applies → 10h work cap ("],
-["nie dotyczy ✓","not affected ✓"],
-["Jazda dzienna","Daily driving"],
-["Dziś przejechane","Driven today"],
-["Możesz jeszcze","You can still drive"],
-["0:00 — STOP","0:00 — STOP"],
-["Wydłużenia do 10h (ten tydz.)","10h extensions (this week)"],
-[" — limit dziś: 9h"," — today's limit: 9h"],
-["Odpoczynek dobowy","Daily rest"],
-["Trwa odpoczynek","Rest in progress"],
-["przerwa 45 min","45-min break"],
-["1. część dzielonego (3h)","1st part of split rest (3h)"],
-["dobowy skrócony (9h)","reduced daily (9h)"],
-["dobowy pełny (11h)","regular daily (11h)"],
-["tygodniowy skrócony (24h)","reduced weekly (24h)"],
-["tygodniowy pełny (45h)","regular weekly (45h)"],
-["✓ zaliczone","✓ completed"],
-["Doba trwa od","Shift running since"],
-["Masz 1. część dzielonego (≥3h) → 2. część 9h zacznij do","You have the 1st split part (≥3h) → start the 9h part by"],
-["Pełny 11h — zacznij do","Regular 11h — start by"],
-["Skrócony 9h — zacznij do","Reduced 9h — start by"],
-["Skrócony 9h","Reduced 9h"],
-["niedostępny (3/3 użyte)","unavailable (3/3 used)"],
-["Skrócone dobowe od ost. tyg.","Reduced dailies since last weekly"],
-["Tydzień i 2 tygodnie","Week & fortnight"],
-["jazda w tym tygodniu","driving this week"],
-["Zostało w tygodniu","Left this week"],
-["2 tyg. (poprz.+bież.)","2 weeks (prev.+curr.)"],
-["Zostało w 2-tyg. puli","Left in 2-week pool"],
-["Odpoczynek tygodniowy","Weekly rest"],
-["Następny tyg. odpoczynek zacznij do","Start next weekly rest by"],
-["Ostatni tygodniowy skończył się","Last weekly rest ended"],
-["Brak jeszcze zarejestrowanego odpoczynku tygodniowego (≥24h)","No weekly rest (≥24h) recorded yet"],
-["Rekompensata do oddania","Compensation due"],
-["Rekompensaty","Compensations"],
-["brak zaległych ✓","none outstanding ✓"],
-[" (okno 24h)"," (24h window)"],
-// — podpowiedzi pod tarczą —
-["przerwa zaliczona ✓ — licznik jazdy wyzerowany","break completed ✓ — driving counter reset"],
-["trwa przerwa: <b>","break in progress: <b>"],
-["wystarczy 30 min","30 min is enough"],
-["pełne 45 min","the full 45 min"],
-[" zaliczysz o <b>"," completed at <b>"],
-["limit 4:30 przekroczony — <b>natychmiast rozpocznij przerwę 45 min</b>","4:30 limit exceeded — <b>start a 45-min break immediately</b>"],
-["możesz jechać jeszcze <b>","you can still drive <b>"],
-[" — przerwę zacznij najpóźniej o <b>"," — start your break no later than <b>"],
-["(15 min zaliczone → wystarczy 30)","(15 min banked → 30 is enough)"],
-["licznik czysty — pełne <b>4:30</b> jazdy do dyspozycji","counter clean — a full <b>4:30</b> of driving available"],
-[" po przerwie (limit 10h: "," after the break (10h limit: "],
-["Trwa: <b>","Now: <b>"],
-// — dziennik / analiza —
-["jazda ","driving "],
-["• trwa","• ongoing"],
-["Naruszenia: ","Violations: "],
-["Brak naruszeń — jedziesz czysto ✓","No violations — you're running clean ✓"],
-["Ostrzeżenia","Warnings"],
-["Wykorzystane furtki i terminy","Used allowances & deadlines"],
-["Jazda tygodniami","Driving by week"],
-["Tydzień od","Week from"],
-["Jazda</th>","Driving</th>"],
-["Limit 56h","56h limit"],
-["przekroczony","exceeded"],
-[" zapasu)"," margin)"],
-["Rekompensaty za skrócone tygodniowe","Compensations for reduced weeklies"],
-[" • termin "," • due "],
-["oddana ","returned "],
-["PO TERMINIE","OVERDUE"],
-["do oddania","due"],
-// — komunikaty silnika (fragmenty wokół wartości dynamicznych) —
-["Jazda ciągła przekroczona: ","Continuous driving exceeded: "],
-[" bez wymaganej przerwy 45 min (limit 4h 30m)."," without the required 45-min break (limit 4h 30m)."],
-["Jazda dzienna ","Daily driving "],
-[" — przekroczony nawet limit 10h (doba od "," — even the 10h limit exceeded (shift from "],
-["Trzecie wydłużenie jazdy do 10h w tygodniu ","Third 10h driving extension in week "],
-[" — dozwolone są 2."," — only 2 are allowed."],
-["Wykorzystano wydłużenie jazdy do 10h (","10h driving extension used ("],
-["/2 w tygodniu od ","/2 in week from "],
-["Czwarty skrócony odpoczynek dobowy (","Fourth reduced daily rest ("],
-[") między odpoczynkami tygodniowymi — dozwolone są 3.",") between weekly rests — only 3 are allowed."],
-["Czwarty skrócony odpoczynek dobowy między tygodniowymi.","Fourth reduced daily rest between weeklies."],
-["Skrócony odpoczynek dobowy ","Reduced daily rest "],
-["/3 od ostatniego tyg.).","/3 since last weekly)."],
-["Doba od ","Shift from "],
-[": w ciągu 24h nie zakończono odpoczynku dobowego (zmieściło się ",": no daily rest completed within 24h (only "],
-[": odpoczynek dobowy zakończony po upływie 24h (w oknie tylko ",": daily rest finished after the 24h window (inside it only "],
-["Bieżąca doba (od ","Current shift (from "],
-[") przekroczyła 24h bez zakończonego odpoczynku dobowego.",") exceeded 24h without a completed daily rest."],
-["Jazda w tygodniu od ","Driving in week from "],
-[" — limit 56h."," — 56h limit."],
-["Jazda w 2 tygodniach (","Driving over 2 weeks ("],
-[" — limit 90h."," — 90h limit."],
-["Odpoczynek tygodniowy rozpoczęty po ","Weekly rest started after "],
-[" od zakończenia poprzedniego — max to 144h (6×24h)."," since the previous one ended — max is 144h (6×24h)."],
-["Minęło już ","Already "],
-[" od końca ostatniego odpoczynku tygodniowego — kolejny należało zacząć do "," since the last weekly rest ended — the next one had to start by "],
-["Dwa skrócone odpoczynki tygodniowe z rzędu — dozwolone tylko w transporcie międzynarodowym poza krajem bazy; obie rekompensaty oddaj przed kolejnym tyg. odpoczynkiem, dołączone do regularnego 45h.","Two consecutive reduced weekly rests — allowed only in international transport outside the base country; return both compensations before the next weekly rest, attached to a regular 45h."],
-["Dwa skrócone odpoczynki tygodniowe z rzędu — w 2 kolejnych tygodniach wymagany co najmniej jeden regularny (45h).","Two consecutive reduced weekly rests — at least one regular (45h) is required in any 2 consecutive weeks."],
-["Rekompensata ","Compensation "],
-[" za skrócony tyg. odpoczynek ("," for a reduced weekly rest ("],
-[") nieoddana do ",") not returned by "],
-["Do oddania rekompensata ","Compensation due: "],
-[" (jednym blokiem, doklejona do odpoczynku ≥9h) do "," (in one block, attached to a rest ≥9h) by "],
-["Ponad 6h pracy (","Over 6h of work ("],
-[") bez wymaganej przerwy — po maks. 6h pracy przysługuje min. 30 min (45 min przy pracy >9h dziennie), także w częściach ≥15 min.",") without the required break — after max 6h of work you must take min. 30 min (45 min if daily work >9h), splittable into ≥15-min parts."],
-["Dzień pracy ","Working day "],
-[" (>9h) z przerwami łącznie "," (>9h) with breaks totalling "],
-[" — ustawa wymaga min 45 min (doba od "," — the act requires min. 45 min (shift from "],
-["Praca zahaczyła o porę nocną (","Work touched the night window ("],
-["), a dniówka wyniosła ","), and the shift reached "],
-[" — limit przy pracy nocnej to 10h między odpoczynkami (art. 21 ustawy)."," — the night-work cap is 10h between rests (art. 21)."],
-["Bieżąca dniówka zahacza o porę nocną (","Current shift touches the night window ("],
-[") i przekroczyła 10h pracy (",") and exceeded 10h of work ("],
-[") — art. 21 ustawy.",") — art. 21."],
-// — toasty / drobiazgi —
-["Zapisano","Saved"],
-["Usunięto","Deleted"],
-["Wyczyszczono","Cleared"],
-["Sprawdź daty — koniec musi być po początku","Check dates — the end must be after the start"],
-["Inny wpis już trwa — najpierw go zakończ","Another entry is ongoing — finish it first"],
-["■ Anulowano — wpis krótszy niż minuta","■ Cancelled — entry shorter than a minute"],
-["Nic nie trwa","Nothing is running"],
-["Zakończono: ","Finished: "],
-[" już trwa"," is already running"],
-["Wyeksportowano ","Exported "],
-["Scalono: dodano ","Merged: added "],
-["Zaimportowano ","Imported "],
-[" wpisów"," entries"],
-["Nieprawidłowy plik backupu","Invalid backup file"],
-["Klucz API zapisany","API key saved"],
-["Klucz usunięty","Key removed"],
-[" włączony"," enabled"],
-[" wyłączony"," disabled"],
-["Alarmy 6h pracy ","6h work alarms "],
-["Alarm ","Alarm "],
-["„limit osiągnięty\"","\"limit reached\""],
-["Edytuj wpis","Edit entry"],
-["Nowy wpis","New entry"],
-["baza offline","offline base"],
-["Nie udało się uzyskać odpowiedzi.","Could not get an answer."],
-["Brak połączenia z API (offline?).","No API connection (offline?)."],
-// — statyczne etykiety (nav, przyciski, karty, ustawienia) —
-["Dziennik","Log"],
-["Analiza","Analysis"],
-["Poradnik","Guide"],
-["Ustawienia analizy","Analysis settings"],
-["Ustawienia","Settings"],
-["Pytaj","Ask"],
-["Dziś","Today"],
-["Inna praca","Other work"],
-["Dyspozycja","Availability"],
-["Odpocz.","Rest"],
-["Odpoczynek","Rest"],
-["Dysp.","Avail."],
-["Praca</span>","Work</span>"],
-["Jazda</span>","Driving</span>"],
-["Jazda ciągła","Continuous driving"],
-["jazda ciągła · 4:30","continuous driving · 4:30"],
-["■ ZAKOŃCZ BIEŻĄCĄ AKTYWNOŚĆ","■ STOP CURRENT ACTIVITY"],
-["＋ Dodaj wpis ręcznie","＋ Add entry manually"],
-["Bieżąca doba pracownicza","Current working shift"],
-["jazda</span>","driving</span>"],
-["inna praca","other work"],
-["dyspozycja","availability"],
-["odpoczynek","rest"],
-["Asystent Dziennik Kierowcy","Dziennik Kierowcy assistant"],
-["Kopia zapasowa","Backup"],
-["⬇ Eksportuj dane (JSON)","⬇ Export data (JSON)"],
-["⬆ Importuj z pliku…","⬆ Import from file…"],
-["Transport międzynarodowy","International transport"],
-["Alarmy przerwy","Break alarms"],
-["Wygląd","Appearance"],
-["Język / Language","Language / Język"],
-["wg telefonu","follows phone"],
-["Ciemny","Dark"],["Efekt tarczy","Dial effect"],['<span class="t">Brak</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">statyczna','<span class="t">None</span><small style="font-size:.6rem;color:var(--mut);font-weight:500">static'],["statyczna","static"],[">Puls<",">Pulse<"],["poświata","glow"],[">Pływanie<",">Flow<"],["refleks","shine"],[">Oba<",">Both<"],["puls + refleks","pulse + shine"],
-["Jasny","Light"],
-["Styl licznika","Dial style"],
-["Model odpowiedzi","Answer model"],
-["Najwyższy dostępny","Top available"],
-["Ekonomiczny (Haiku)","Economy (Haiku)"],
-["Asystent AI — tryb rozszerzony (opcjonalny)","AI assistant — extended mode (optional)"],
-["Instalacja — iPhone i Android","Install — iPhone & Android"],
-["Strefa ryzyka","Danger zone"],
-["Usuń wszystkie dane","Delete all data"],
-["Początek","Start"],
-["Koniec","End"],
-["Notatka","Note"],
-["Anuluj","Cancel"],
-["Zapisz","Save"],
-["Usuń wpis","Delete entry"],
-["Wpis</h3>","Entry</h3>"],
-["Jazda","Driving"],
-[" do <b>"," by <b>"],
-[" do "," by "],
-["od ","since "],
-[" o <b>"," at <b>"],
-[" o "," at "],
-// — odpowiedzi asystenta (statyczne w całości + fragmenty dynamicznych) —
-["Dziś przejechane: <b>","Driven today: <b>"],
-["Limit dzienny: <b>","Daily limit: <b>"],
-[" (masz dostępne wydłużenie do 10h, wykorzystane "," (10h extension available, used "],
-[" (wydłużenia 2/2 zużyte — dziś max 9h)"," (2/2 extensions used — max 9h today)"],
-["Zostało: <b>","Remaining: <b>"],
-["Przerwę (45 min","Break (45 min"],
-[" — masz zaliczone 15, wystarczy <b>30 min</b>"," — you banked 15, <b>30 min</b> is enough"],
-[" lub 15+30)"," or 15+30)"],
-["Pamiętaj też o regule 6h pracy: licznik <b>","Also mind the 6h work rule: counter <b>"],
-["Pełny odpoczynek 11h zacznij do <b>","Start the full 11h rest by <b>"],
-[", skrócony 9h do <b>",", reduced 9h by <b>"],
-[" (użyte "," (used "],
-[" — skrócone 3/3 zużyte, dziś tylko pełny 11h"," — reduced 3/3 used, only the full 11h left today"],
-["Ten tydzień: <b>","This week: <b>"],
-[" / 56h (zostało "," / 56h (left "],
-["Dwa tygodnie: <b>","Two weeks: <b>"],
-[" / 90h (zostało "," / 90h (left "],
-["Wydłużenie jazdy do 10h: dozwolone <b>2× na tydzień</b> kalendarzowy, bez wpisów i opisów — to uprawnienie. W tym tygodniu wykorzystane: <b>","Extending driving to 10h: allowed <b>2× per calendar week</b>, no printouts or notes — it's your entitlement. Used this week: <b>"],
-[" — możesz dziś jechać do 10h."," — you may drive up to 10h today."],
-[" — limit wyczerpany, dziś max 9h."," — allowance used up, max 9h today."],
-["Skrócony odpoczynek dobowy (min. <b>9h</b>) możesz stosować <b>3×</b> między dwoma tygodniowymi — bez rekompensaty. Daje okno pracy 15h. Wykorzystane od ostatniego tygodniowego: <b>","A reduced daily rest (min. <b>9h</b>) may be used <b>3×</b> between two weeklies — no compensation. It opens a 15h work window. Used since the last weekly: <b>"],
-["Dziś dostępny — zacznij do <b>","Available today — start by <b>"],
-["Pula zużyta — wymagany pełny 11h.","Pool used up — a full 11h is required."],
-["Odpoczynek dzielony: pierwsza część <b>min. 3h</b>, druga <b>min. 9h</b> — w tej kolejności, łącznie 12h. Druga część musi zakończyć się w ciągu 24h od podjęcia pracy. Nie zużywa puli skróconych i nie wydłuża doby — ratuje dzień z długim postojem w środku (np. załadunek).","Split rest: first part <b>min. 3h</b>, second <b>min. 9h</b> — in that order, 12h in total. The second part must end within 24h of starting work. It doesn't use the reduced-rest pool and doesn't stretch the shift — it saves a day with a long mid-day stop (e.g. loading)."],
-["Odpoczynek tygodniowy: regularny <b>45h</b> lub skrócony <b>≥24h</b> (z rekompensatą). Kolejny musisz zacząć najpóźniej <b>144h (6×24)</b> po końcu poprzedniego","Weekly rest: regular <b>45h</b> or reduced <b>≥24h</b> (with compensation). The next one must start no later than <b>144h (6×24)</b> after the previous one ends"],
-[" — u Ciebie do <b>"," — for you by <b>"],
-[". W 2 kolejnych tygodniach min. jeden regularny (wyjątek: międzynarodowy).",". In any 2 consecutive weeks at least one regular (exception: international)."],
-["Do oddania: <b>","Due: <b>"],
-["Nie masz zaległych rekompensat ✓.","No outstanding compensations ✓."],
-[" Zasady: rekompensatę za skrócony tygodniowy oddajesz <b>jednym blokiem</b>, doklejoną do odpoczynku ≥9h, do końca <b>3. tygodnia</b> po tygodniu skrócenia."," Rules: compensation for a reduced weekly is returned <b>in one block</b>, attached to a rest ≥9h, by the end of the <b>3rd week</b> after the reduction week."],
-["Reguła 6h (ustawa o czasie pracy kierowców): po maks. <b>6h pracy</b> (jazda + inna praca, bez dyspozycyjności) — przerwa <b>30 min</b> (45 min gdy dobowo &gt;9h pracy), można w częściach ≥15 min. Przerwa 45 z 561 zalicza oba liczniki. Twój licznik: <b>","The 6h rule (Polish drivers' working time act): after max <b>6h of work</b> (driving + other work, availability excluded) — a <b>30 min</b> break (45 min if daily work &gt;9h), splittable into ≥15-min parts. The 45-min break from 561 covers both counters. Your counter: <b>"],
-[", przerwę zacznij do <b>",", start the break by <b>"],
-["Przerwa w jeździe: <b>45 min</b> po maks. 4:30 jazdy, albo dzielona <b>15 + 30 w tej kolejności</b> (30+15 nie działa!). Do przerwy liczy się wyłącznie symbol łóżka 🛏 — inna praca i dyspozycyjność nie zerują licznika. Przerwa ≥45 min zeruje zawsze, nawet po godzinie jazdy.","Driving break: <b>45 min</b> after max 4:30 of driving, or split <b>15 + 30 in that order</b> (30+15 does not work!). Only the bed symbol 🛏 counts — other work and availability don't reset the counter. A break ≥45 min always resets, even after one hour of driving."],
-["Dwa skrócone tygodniowe z rzędu — tylko w <b>transporcie międzynarodowym</b>, oba poza krajem bazy. Obie rekompensaty oddajesz przed kolejnym tygodniowym, doklejone do regularnego 45h. W kraju: w 2 kolejnych tygodniach min. jeden regularny.","Two reduced weeklies in a row — only in <b>international transport</b>, both outside the base country. Return both compensations before the next weekly, attached to a regular 45h. Domestically: at least one regular in any 2 consecutive weeks."],
-["Karta: włóż do slotu 1 chipem do góry → wybierz <b>kraj rozpoczęcia</b> → potwierdź proponowane wpisy manualne. Koniec dnia: przytrzymaj przycisk slotu → <b>kraj zakończenia</b> → wyjmij (nigdy w ruchu). Na postoju ręcznie ustaw 🛏 — tachograf sam przełącza na 🔨, a tylko łóżko liczy się do przerw.","Card: insert into slot 1 chip up → choose the <b>start country</b> → confirm the suggested manual entries. End of day: hold the slot button → <b>end country</b> → remove (never while moving). When parked, manually set 🛏 — the tachograph auto-switches to 🔨, and only the bed counts towards breaks."],
-["Wpisy manualne: wszystko od wyjęcia do włożenia karty (odpoczynek/praca/dyspozycyjność) uzupełniasz <b>przy wkładaniu karty</b>, zanim ruszysz — tachograf sam zapyta. Brak wpisów to jedno z najczęstszych naruszeń przy kontroli w firmie.","Manual entries: everything between removing and inserting the card (rest/work/availability) is entered <b>when inserting the card</b>, before you move — the tachograph will ask. Missing entries are among the most common findings in company audits."],
-["Symbole aktywności: 🚛 jazda • 🔨 inna praca • ⬜ dyspozycyjność • 🛏 odpoczynek. Litera <b>R</b> na wyświetlaczu (DTCO 4.1) = aktywna obsługa zdalna (telematyka/Bluetooth) — informacja, nie błąd; okresy zdalne widać na wydruku jako „iR\".","Activity symbols: 🚛 driving • 🔨 other work • ⬜ availability • 🛏 rest. The letter <b>R</b> on the display (DTCO 4.1) = remote operation active (telematics/Bluetooth) — information, not a fault; remote periods show on printouts as \"iR\"."],
-["Tryb <b>OUT</b> = jazda poza zakresem 561/2006 (np. przewóz nietypowy). Włączaj świadomie i <b>wyłącz po powrocie</b> do przewozu objętego przepisami — jazda na OUT „po cichu\" to prosta droga do zarzutu manipulacji.","<b>OUT</b> mode = driving outside the scope of 561/2006 (e.g. exempt transport). Switch it on deliberately and <b>off when back</b> in scope — quietly driving on OUT is a short road to a tampering charge."],
-["Prom/pociąg: regularny odpoczynek <b>dobowy 11h</b> lub <b>tygodniowy 45h</b> (przy dostępie do koi) możesz przerwać <b>maks. 2× łącznie ≤1h</b> na wjazd/zjazd. Ustaw symbol promu w tachografie przed rozpoczęciem odpoczynku.","Ferry/train: a regular <b>daily 11h</b> or <b>weekly 45h</b> rest (with bunk access) may be interrupted <b>max 2×, ≤1h in total</b> for boarding/disembarking. Set the ferry symbol on the tachograph before starting the rest."],
-["Art. 12: możesz przekroczyć limity, by dojechać do bezpiecznego postoju, gdy zdarzyło się coś nieprzewidzianego. Dodatkowo: <b>+1h</b> do bazy/domu na tygodniowy odpoczynek, <b>+2h</b> (po 30-min przerwie) na regularny 45h. Zawsze: <b>wydruk + odręczny opis + podpis niezwłocznie</b> po zatrzymaniu.","Art. 12: you may exceed the limits to reach a safe stopping place when something unforeseeable happened. Additionally: <b>+1h</b> to base/home for a weekly rest, <b>+2h</b> (after a 30-min break) for a regular 45h. Always: <b>printout + handwritten note + signature immediately</b> after stopping."],
-["Kontrola drogowa: okazujesz kartę i dane za <b>bieżący dzień + 56 dni wstecz</b> (od 31.12.2024). Do tego wydruki z adnotacjami (awarie, art. 12). Nietypowe zdarzenia bronią się tylko wtedy, gdy są <b>opisane</b>.","Roadside check: you present the card and data for the <b>current day + 56 days back</b> (since 31.12.2024). Plus printouts with notes (failures, art. 12). Unusual events defend themselves only when they are <b>described</b>."],
-["Od <b>1.07.2026</b> busy 2,5–3,5 t w <b>międzynarodowym</b> przewozie rzeczy i kabotażu podlegają pełnemu 561/2006 + tachograf inteligentny <b>G2v2</b>. Przewóz wyłącznie krajowy — poza rozporządzeniem (ale polska ustawa o czasie pracy obowiązuje).","Since <b>1.07.2026</b>, 2.5–3.5 t vans in <b>international</b> carriage of goods and cabotage fall under the full 561/2006 + the smart tachograph <b>G2v2</b>. Purely domestic transport — outside the regulation (but the Polish working time act still applies)."],
-["Przekroczenie granicy: kierowca zatrzymuje się na najbliższym możliwym postoju i wpisuje symbol kraju (od 2.02.2022). <b>G2v2 robi to automatycznie przez GNSS</b> — ręcznie zostaje tylko kraj rozpoczęcia i zakończenia przy karcie.","Border crossing: the driver stops at the nearest possible place and enters the country symbol (since 2.02.2022). <b>G2v2 does it automatically via GNSS</b> — only the start and end country at the card remain manual."],
-["Załoga kilkuosobowa: w ciągu 30h od końca odpoczynku każdy kierowca musi odebrać nowy dobowy <b>min. 9h</b>. Przerwę 45 min możesz odebrać w jadącym pojeździe obok zmiennika. Przez pierwszą godzinę obecność drugiego kierowcy nie jest obowiązkowa.","Multi-manning: within 30h of the end of a rest, each driver must take a new daily rest of <b>min. 9h</b>. The 45-min break may be taken in the moving vehicle next to your co-driver. For the first hour the second driver's presence is not mandatory."],
-["Kary (PL, orientacyjnie): drobne przekroczenia 50–300 zł, poważne (odpoczynki, 2h+) 300–2000 zł dla kierowcy; firma odpowiada równolegle do <b>12 000 zł</b> na kontrolę; manipulacje 2000 zł + zatrzymanie i utrata reputacji przewoźnika.","Fines (PL, roughly): minor overruns PLN 50–300, serious ones (rests, 2h+) PLN 300–2000 for the driver; the company is liable in parallel up to <b>PLN 12,000</b> per check; tampering PLN 2000 + detention and loss of the operator's good repute."],
-["Dziennik Kierowcy: wpisujesz tylko aktywności — <b>luki między wpisami traktuję jako odpoczynek</b>. Odpoczynki klasyfikuję długością (45min/3h/9h/11h/24h/45h). Analiza liczy oba prawa: 561/2006 i polską regułę 6h pracy. Backup: eksport JSON w zakładce Backup.","Dziennik Kierowcy: you log activities only — <b>gaps between entries are treated as rest</b>. Rests are classified by length (45min/3h/9h/11h/24h/45h). The analysis applies both laws: 561/2006 and the Polish 6h work rule. Backup: JSON export in the Backup tab."],
-["Tygodniowy zaczęty w piątek wieczorem (45h) kończy się w niedzielę wieczorem — auto gotowe na nocny start. Pilnuj 6×24: kolejny tygodniowy start najpóźniej <b>","A weekly started Friday evening (45h) ends Sunday evening — the truck is ready for a night departure. Watch the 6×24: the next weekly must start no later than <b>"],
-["Pora nocna (art. 21 ustawy): jeśli choć fragment pracy wypada w 4-godzinnej porze nocnej (u Ciebie <b>","Night time (art. 21 of the act): if any fragment of work falls within the 4-hour night window (yours: <b>"],
-[", zmienisz w Ustawieniach), praca między dwoma odpoczynkami może trwać max <b>10 h</b>. Dziś: ",", change it in Settings), work between two rests may last max <b>10 h</b>. Today: "],
-["<b>dotyczy</b> — masz ","<b>applies</b> — you have "],
-[". To limit pracy (jazda+inna), niezależny od limitów jazdy z 561/2006.",". It caps work (driving+other), independent of the 561/2006 driving limits."],
-["<b>limit dzienny wyczerpany</b> (","<b>daily limit used up</b> ("],
-[") — rozpocznij odpoczynek dobowy",") — start your daily rest"],
-[" — ogranicza limit dzienny ("," — capped by the daily limit ("],
-["limit 4:30","4:30 limit"],
-["jazda ciągła","continuous driving"],
-["Długa przerwa w danych","Long gap in the data"],
-["Tak — to był odpoczynek","Yes — it was rest"],
-["Nie — uzupełnię wpisy","No — I'll add entries"],
-["Od ostatniego wpisu minęło <b>","Since the last entry, <b>"],
-[" h</b>. Traktuję ten czas jako odpoczynek"," h</b> have passed. I treat this time as a"],
-[" tygodniowy"," (weekly)"],
-[" i od niego liczę świeże limity. Jeśli w międzyczasie była jazda lub praca — uzupełnij wpisy."," and count fresh limits from it. If there was any driving or work in between — add the entries."],
-["Odpoczynek potwierdzony ✓","Rest confirmed ✓"],
-["Wydłużenie już wykorzystane jazdą — nie można cofnąć","Extension already consumed by driving — cannot undo"],
-["Wydłużenie 10h cofnięte","10h extension cancelled"],
-["Brak wolnych wydłużeń w tym tygodniu","No extensions left this week"],
-["Limit dziś: 10h ✓","Today's limit: 10h ✓"],
-[" • dziś 10h ✓"," • today 10h ✓"],
-["PRZERWA ZALICZONA ✓","BREAK COMPLETED ✓"],
-["Wymagane <b>","The required <b>"],
-[" min</b> odebrane — licznik jazdy ciągłej i reguła 6h wyzerowane. Możesz ruszać."," min</b> taken — continuous-driving counter and the 6h rule are reset. You may roll."],
-["Koniec wymaganej przerwy","Required break completed"],
-["zielony sygnał „możesz ruszać\" po 45/30 min","green \"you may roll\" signal after 45/30 min"],
-["Dźwięk alarmów","Alarm sounds"],
-["iPhone: pierwszy dotyk ekranu po starcie odblokowuje audio","iPhone: the first screen tap after launch unlocks audio"],
-["Sygnał końca przerwy ","End-of-break signal "],
-["Dźwięk ","Sound "],
-["ODPOCZYNEK 11H ✓","11H REST ✓"],
-["Pełny odpoczynek dobowy odebrany. Świeże limity: <b>4:30</b> jazdy ciągłej i pełna dniówka przed Tobą.","Full daily rest taken. Fresh limits: <b>4:30</b> of continuous driving and a full day ahead."],
-["ODPOCZYNEK 9H ✓","9H REST ✓"],
-["Możesz ruszyć — zamkniesz dobę jako <b>skrócony</b> (","You may roll — the shift will close as a <b>reduced</b> daily ("],
-["/3). Wolisz pełny 11h? Będzie o <b>","/3). Prefer the full 11h? At <b>"],
-["Pula skróconych <b>3/3</b> zużyta — dośpij do pełnych 11h: o <b>","Reduced pool <b>3/3</b> used — sleep on to the full 11h: at <b>"],
-["Zaliczenie przerwy / odpoczynku","Break / rest completed"],
-["zielony sygnał: po 45/30 min, po 9 h i po 11 h","green signal: after 45/30 min, after 9 h and after 11 h"],
-["sprawdź też boczny przełącznik trybu cichego i głośność","also check the side silent switch and volume"],
-["Dokończona dzielona przerwa <b>15+30</b>","Split break <b>15+30</b> completed"],
-["Przerwa <b>45 min</b> odebrana","The <b>45-min</b> break taken"],
-[" — licznik jazdy ciągłej i reguła 6h wyzerowane. Możesz ruszać."," — the continuous-driving counter and the 6h rule are reset. You may roll."],
-["Gdyby to był postój na dobę: 9h o <b>","If this stop is your daily rest: 9h at <b>"],
-["</b> • 11h o <b>","</b> • 11h at <b>"],
-[" — obejmuje sobotę i niedzielę, więc traktuję go jako <b>odpoczynek weekendowy</b> ("," — it covers Saturday and Sunday, so I treat it as a <b>weekend rest</b> ("],
-["tygodniowy regularny (45h+)","regular weekly (45h+)"],
-["tygodniowy skrócony (24h+)","reduced weekly (24h+)"],
-["; pamiętaj o rekompensacie","; remember the compensation"],
-[" — to weekend, ale <b>za krótko na tygodniowy</b>: do 24h brakuje "," — it's the weekend, but <b>too short for a weekly rest</b>: "],
-[" h (liczę jako dobowy)."," h short of 24h (counted as daily)."],
-[". Traktuję ten czas jako odpoczynek ",". I treat this time as a "],
-["dobowy","daily"],
-[" Od niego liczę świeże limity. Jeśli w międzyczasie była jazda lub praca — uzupełnij wpisy."," I count fresh limits from it. If there was any driving or work in between — add the entries."],
-[" — obejmuje sobotę i niedzielę, więc traktuję go jako <b>odpoczynek weekendowy</b> ("," — it covers Saturday and Sunday, so I treat it as a <b>weekend rest</b> ("],
-["tygodniowy regularny (45h+)","regular weekly (45h+)"],
-["tygodniowy skrócony (24h+)","reduced weekly (24h+)"],
-["; pamiętaj o rekompensacie","; remember the compensation"],
-[" — to weekend, ale <b>za krótko na tygodniowy</b>: do 24h brakuje "," — it's the weekend, but <b>too short for a weekly rest</b>: still "],
-[" h (liczę jako dobowy)."," h short of 24h (counting it as daily)."],
-[". Traktuję ten czas jako odpoczynek ",". I treat this time as a "],
-["dobowy.","daily rest."],
-[" Od niego liczę świeże limity. Jeśli w międzyczasie była jazda lub praca — uzupełnij wpisy."," I count fresh limits from it. If there was any driving or work in between — add the entries."],
-["Praca dziś łącznie (jazda + inna)","Work today in total (driving + other)"],
-["przerwa dzienna — art. 13","daily break — art. 13"],
-["zaliczona ✓","completed ✓"],
-[" / wym. 30"," / req. 30"],
-["Dzień &gt;9h — dobierz przerwę do 45 min","Day &gt;9h — top the break up to 45 min"],
-["\">jeszcze ","\">still "],
-["Ponad 6h pracy ciągłej (jazda + inna: ","Over 6h of continuous work (driving + other: "],
-[") bez wymaganej przerwy dziennej — po 6h przysługuje min 30 min (45 przy >9h), w częściach ≥15 min (art. 13).",") without the required daily break — after 6h you are due min. 30 min (45 if >9h), in parts ≥15 min (art. 13)."],
-["Reguła 6h: przerwa dzienna zaliczona ✓.","6h rule: daily break completed ✓."],
-["Reguła 6h: licznik <b>","6h rule: counter <b>"],
-["Dziś: przerwa dzienna zaliczona ✓ (","Today: daily break completed ✓ ("],
-["🌙 Zakończ dzień — rozpocznij odpoczynek","🌙 End the day — start your rest"],
-["Trwa odpoczynek — kiedy możesz ruszyć","Rest in progress — when you can roll"],
-["Najwcześniejszy start (","Earliest start ("],
-["2. część dzielonego (9h)","2nd part of split rest (9h)"],
-["skrócony 9h — wolne ","reduced 9h — free "],
-["pełny 11h (skrócone 3/3 zużyte)","full 11h (reduced 3/3 used)"],
-["Pełny dobowy 11h","Full daily 11h"],
-["Reset 4:30 i 6h (przerwa 45 min)","Reset of 4:30 & 6h (45-min break)"],
-["✓ od ","✓ since "],
-["• za ","• in "],
- ["● dziś 9h (＋1h dostępne)","● today 9h (＋1h available)"],
-[" • dziś 9h (＋1h dostępne)"," • today 9h (＋1h available)"],
-[" do limitu 9h — <b>＋1h</b> przy tarczy podniesie do 10h"," to the 9h limit — <b>＋1h</b> by the dial raises it to 10h"],
-["10h po 45′","10h after 45′"],
-[" • 10h po przerwie 45′"," • 10h after a 45′ break"],
-["Zarezerwowane — 10h aktywne po przerwie 45 min (jak w tachografie)","Reserved — 10h activates after a 45-min break (tachograph-style)"],
-["☀️ Rozpocznij dzień — od pracy (przegląd, dokumenty)","☀️ Start the day — with work (checks, paperwork)"],
-["<b>okno dobowe 15h zamknięte</b> — musisz rozpocząć odpoczynek 9h","<b>15h daily window closed</b> — you must start a 9h rest"],
-["możesz jechać jeszcze <b>","you can still drive <b>"],
-["</b> — ogranicza <b>okno dobowe 15h</b>, odpoczynek 9h zacznij do <b>","</b> — limited by the <b>15h daily window</b>, start a 9h rest by <b>"],
-["okno 15h","15h window"],
-["OUT — poza zakresem","OUT — out of scope"],
-["OUT (poza zakresem)","OUT (out of scope)"],
-["Tryb OUT aktywny — poza zakresem 561/2006","OUT mode active — outside the scope of 561/2006"],
-["Trwa OUT","OUT running"],
-["OUT w tej dobie","OUT in this day"],
-["Nie wlicza się do","Not counted towards"],
-["jazdy 4:30 • 9/10h • 56h","driving 4:30 • 9/10h • 56h"],
-["Wlicza się do","Counted towards"],
-["czasu pracy i okna 15h","work time and the 15h window"],
-["<b>TRYB OUT</b> — ta jazda nie wlicza się do limitów jazdy; <b>zakończ OUT</b> po powrocie","<b>OUT MODE</b> — this driving is not counted towards driving limits; <b>end OUT</b> when back in scope"],
-["Po powrocie do przewozu objętego przepisami <b>zakończ OUT</b> i przełącz na Jazdę. Warto zrobić wydruk z tachografu i opisać na odwrocie.","When back in scope <b>end OUT</b> and switch to Driving. It is worth printing the tachograph readout and describing it on the back."],
-["🏠 Powrót na bazę (art. 12) — wydłuż jazdę","🏠 Return to base (art. 12) — extend driving"],
-["🏠 Powrót na bazę — art. 12","🏠 Return to base — art. 12"],
-["🏠 Powrót na bazę — art. 12 aktywny","🏠 Return to base — art. 12 active"],
-["Wydłużenie jazdy","Driving extension"],
-["Limit jazdy dziś","Driving limit today"],
-["Przerwa 30 min przed dodatkową jazdą","30-min break before extra driving"],
-["baza / dom — odpoczynek tygodniowy","base / home — weekly rest"],
-["Zakończ / anuluj art. 12","End / cancel art. 12"],
-["＋1 godzina","＋1 hour"],
-["＋2 godziny","＋2 hours"],
-["Anuluj","Cancel"],
-["<b>limit pracy nocnej 10h wyczerpany</b> (","<b>10h night work cap reached</b> ("],
-["możesz pracować jeszcze <b>","you can still work <b>"],
-["</b> — ogranicza <b>limit pracy nocnej 10h</b> (","</b> — limited by the <b>10h night work cap</b> ("],
-["noc 10h","night 10h"],
-["LIMIT NOCNY 10H — KONIEC PRACY!","10H NIGHT CAP — STOP WORKING!"],
-["Limit nocny 10h za ","10h night cap in "],
-["Praca zahaczyła o porę nocną, więc dniówka nie może przekroczyć <b>10 h</b> (art. 21 ustawy). Limit osiągnięty — <b>zakończ pracę i rozpocznij odpoczynek dobowy</b>. Przerwa tego nie odblokuje.","Work touched the night window, so the shift cannot exceed <b>10 h</b> (art. 21). Limit reached — <b>stop working and start a daily rest</b>. A break will not unlock it."],
-["Zbliżasz się do <b>10 h pracy</b> (jazda + inna praca) przy dotkniętej porze nocnej.<br>Pracę zakończ najpóźniej o <b>","You are approaching <b>10 h of work</b> (driving + other work) with the night window touched.<br>Finish work by <b>"],
-["Możesz jeszcze <b>jechać</b>","You can still <b>drive</b>"],
-["Ogranicza","Limited by"],
-["Z samego limitu jazdy zostałoby","From the driving limit alone"],
-["limit pracy nocnej 10h","10h night work cap"],
-["okno dobowe 15h","15h daily window"],
-["Auto-jazda z GPS","GPS auto-driving"],
-["📡 GPS aktywny — auto-jazda","📡 GPS active — auto-driving"],
-["📡 GPS wstrzymany — wróć do aplikacji","📡 GPS paused — return to the app"],
-["🛑 Pojazd stoi","🛑 Vehicle stopped"],
-["Tak — przełącz na Inną pracę","Yes — switch to Other work"],
-["Nie — zostaw Jazdę","No — keep Driving"],
-["GPS MILCZY","GPS SILENT"],
-["Ochrona ekranu","Screen care"],
-["Przesuwaj układ","Shift the layout"],
-["Przygaszaj podczas odpoczynku","Dim during rest"],
-["Alarm gdy GPS milknie","Alarm when GPS goes silent"],
-["pozostało","remaining"],
-["przerwa 4:30","break at 4:30"],
-["limit dzienny","daily limit"],
-["okno 15h","15h window"],
-["praca nocna 10h","10h night work"],
-["jazda ciągła","continuous driving"],
-["limit 4:30","limit 4:30"],
-["Głośny alarm","Loud alarm"],
-["Powtarzaj do potwierdzenia","Repeat until acknowledged"],
-["Utrzymuj w tle","Keep alive in background"],
-["Checklisty dnia","Daily checklists"],
-["Checklisty włączone","Checklists on"],["delikatny sygnał przy każdym pytaniu","soft chime on every question"],
-["📍 Ustaw bazę w obecnym miejscu","📍 Set base at current location"],
-["Baza: ","Base: "],[" (promień 500 m)"," (500 m radius)"],["🔎 Zapisz adres jako bazę","🔎 Save address as base"],
-["Sprawdzam lokalizację…","Checking location…"],["Start dnia","Day start"],["Koniec dnia","Day end"],
-["✓ Tak, zrobione","✓ Yes, done"],["Anuluj","Cancel"],
-["📍 Baza — Studzienice","📍 Base — Studzienice"],["📍 Poza bazą","📍 Away from base"],["📍 Lokalizacja nieznana — pełna lista","📍 Location unknown — full list"],
-["Karta kierowcy włożona do tachografu?","Driver card inserted in the tachograph?"],
-["Kraj rozpoczęcia ustawiony?","Start country entered?"],
-["Wpis manualny w tachografie zrobiony?","Manual entry in the tachograph done?"],
-["Telefon podłączony do CarPlay?","Phone connected to CarPlay?"],
-["Telefon połączony z tachografem?","Phone connected to the tachograph?"],
-["Kraj zakończenia ustawiony?","End country entered?"],["Wydruk zrobiony?","Printout done?"],
-["OUT ustawiony?","OUT set?"],["Karta zczytana?","Card data downloaded?"],
-["✓ Checklista OK — dobrej trasy","✓ Checklist OK — safe trip"],["✓ Checklista OK — dobrego odpoczynku","✓ Checklist OK — enjoy your rest"],
-["🔒 Dzień zakończony — aktywności zablokowane do „Rozpocznij dzień”","🔒 Day ended — activities locked until “Start the day”"],
-["🔒 Dzień zakończony — najpierw „☀️ Rozpocznij dzień”","🔒 Day ended — tap “☀️ Start the day” first"],
-["Wykryto jazdę — rozpocznij dzień","Driving detected — start the day"],
-["🧾 Wydruk i opis naruszenia","🧾 Printout & note for the violation"],["Przyczyna (dotknij)","Reason (tap)"],
-["Opis na odwrocie wydruku","Note on the back of the printout"],["📋 Kopiuj opis","📋 Copy note"],
-["✓ Wydruk zrobiony i opisany","✓ Printout made and annotated"],["✓ Zapisz opis","✓ Save note"],["Cofnij oznaczenie „opisane”","Undo “annotated” mark"],["Zamknij","Close"],
-["Opis nie kasuje naruszenia — to Twoje wyjaśnienie dla kontroli. Wydruk podpisz i zachowaj.","The note does not erase the violation — it is your explanation for an inspection. Sign and keep the printout."],
-["🧾 Zrobiłem wydruk — opisz","🧾 Printout made — annotate"],["✓ Wydruk opisany — ","✓ Printout annotated — "],["pokaż opis","show note"],
-["Opisane na wydruku: ","Annotated on printout: "],["tygodniowy ✓","weekly ✓"],["dobowy ✓","daily ✓"],
-["Odpoczynek ≥24 h liczyć jako","Count rest ≥24 h as"],["dobowy wydłużony","extended daily"],
-["Tygodniowy","Weekly"],["Dobowy","Daily"],
-["Kontakt: ","Contact: "],["✉️ Napisz do autora","✉️ Email the author"],
-["Wszelkie prawa zastrzeżone.","All rights reserved."],
-["Odpoczynek (łóżko) ustawiony na tachografie?","Rest (bed) set on the tachograph?"],
-["Kraj zakończenia ustawiony na tachografie?","End country entered on the tachograph?"],
-["Gdzie jesteś?","Where are you?"],["Nie udało się ustalić lokalizacji","Location unavailable"],
-["🏠 Na bazie","🏠 At base"],["🛣️ W trasie","🛣️ On the road"],["📍 Baza","📍 Base"],
-["Szerokiej drogi! Bezpiecznej jazdy.","Have a safe trip!"],["Dobranoc! Dzień zakończony — wyśpij się dobrze.","Good night! Day ended — sleep well."],
-["Dzień zakończony. Dobrego odpoczynku!","Day ended. Enjoy your rest!"],["Ruszamy 👍","Let's go 👍"],["Dobranoc 👋","Good night 👋"],["Dzięki 👋","Thanks 👋"],
-["Zapisuj miejsca postojów","Save stop locations"],["lokalizacja przy odpoczynku; w Dzienniku od 45 min, z linkiem do mapy","location at rest start; shown in the Log from 45 min with a map link"],
-["odpoczynek dobowy: <b>","daily rest: <b>"],
-["przerwa 45 ✓ — jazda 4:30 i 6 h","45-min break ✓ — 4:30 driving & 6 h"],["15+30 ✓ — jazda 4:30 i 6 h","15+30 ✓ — 4:30 driving & 6 h"],
-["przerwa 6 h ✓ (ustawa) — licznik jazdy bez zmian","6-hour break ✓ (PL law) — driving counter unchanged"],["1. część przerwy (15 min)","1st part of break (15 min)"],
-["Synchronizacja urządzeń","Device sync"],["Połącz i synchronizuj","Connect & sync"],["Synchronizuj teraz","Sync now"],
-["Odłącz to urządzenie","Disconnect this device"],["Ostatnia synchronizacja: ","Last sync: "],["Jeszcze nie zsynchronizowano.","Not synced yet."],
-["Repo (login/nazwa)","Repo (login/name)"],["Token GitHub","GitHub token"],
-["Otwórz miejsce postoju w…","Open stop location in…"],["Mapy Apple","Apple Maps"],["Kopiuj współrzędne","Copy coordinates"],["(np. do nawigacji ciężarowej)","(e.g. for truck navigation)"],
-];
-TR_PAIRS.sort((a,b)=>b[0].length-a[0].length);
-function tr(s){ if(LANG!=='en'||!s) return s; for(const p of TR_PAIRS) s=s.split(p[0]).join(p[1]); return s; }
-const DAYS_EN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+function tr(s){ return s; }   // v1.2.3: tylko polski
 
 /* ================= MOTYW: ciemny / jasny / auto ================= */
 const mqLight = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
@@ -2041,7 +1544,7 @@ function renderToday(R,now){
   if(cur){ nb.style.display='flex';
     nb.querySelector('.pulse').style.background=TYPES[cur.type].color;
     $('nowLabel').innerHTML=tr(`Trwa: <b>${TYPES[cur.type].name}</b>`);
-    $('nowSince').textContent=(LANG==='en'?'since ':'od ')+fmtClock(cur.start);
+    $('nowSince').textContent='od '+fmtClock(cur.start);
     $('nowDur').textContent=fmtHMs((now-cur.start)/MIN);
     document.querySelectorAll('.act').forEach(b=>b.classList.toggle('on',b.dataset.act===cur.type));
     $('stopBtn').classList.add('armed');
@@ -2247,7 +1750,7 @@ function renderLog(){
   for(const e of list){
     const k=new Date(e.start).toDateString();
     if(k!==day){day=k;const d=new Date(e.start);
-      html+=`<div class="day-h"><span class="d">${(LANG==='en'?DAYS_EN:DAYS)[d.getDay()]}, ${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}</span><span class="s">jazda ${fmtHMs(sums[k].drive||0)}</span></div>`;}
+      html+=`<div class="day-h"><span class="d">${DAYS[d.getDay()]}, ${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}</span><span class="s">jazda ${fmtHMs(sums[k].drive||0)}</span></div>`;}
     const dur=((e.end||Date.now())-e.start)/MIN;
     const vv=vByEv[e.id]||[], open=vv.filter(m=>!m.ack);
     const restOK=e.type==='rest' && dur>=L.DAILY_REST_RED;
@@ -2536,111 +2039,7 @@ const GUIDE_PL=`
 <li>Aplikacja wspiera i ostrzega, ale <b>dokumentem jest karta kierowcy</b> — prowadź ją równolegle i bez wyjątków.</li>
 </ul>
 </div></details>`;
-const GUIDE_EN=`
-<details open><summary>📏 Limits in a nutshell<span class="chev">›</span></summary><div class="body">
-<table><tr><th>What</th><th>Limit</th></tr>
-<tr><td>Continuous driving</td><td><b>4 h 30 min</b> → 45-min break (or 15 + 30 <b>in that order</b>)</td></tr>
-<tr><td>Continuous work (PL)</td><td><b>6 h</b> → break of <b>30 min</b> (45 min if daily work >9 h); splittable into ≥15-min parts</td></tr>
-<tr><td>Night work (PL)</td><td>even a minute of work in the night window (4 h within 00–07) ⇒ <b>max 10 h of work</b> between rests</td></tr>
-<tr><td>Daily driving</td><td><b>9 h</b> (twice a week <b>10 h</b>)</td></tr>
-<tr><td>Weekly driving</td><td><b>56 h</b> (week = Mon 00:00 – Sun 24:00)</td></tr>
-<tr><td>Driving in 2 weeks</td><td><b>90 h</b> total</td></tr>
-<tr><td>Daily rest</td><td><b>11 h</b> • reduced <b>9 h</b> (max 3× between weeklies) • split <b>3 h + 9 h</b></td></tr>
-<tr><td>Working shift</td><td>the daily rest must <b>end within 24 h</b> of starting work</td></tr>
-<tr><td>Weekly rest</td><td><b>45 h</b> • reduced <b>≥24 h</b> + compensation • start no later than <b>144 h (6×24)</b> after the previous one ends</td></tr>
-<tr><td>Compensation</td><td>returned <b>in one block</b>, attached to a rest of <b>≥9 h</b>, by the end of the <b>3rd week</b> after the reduction</td></tr></table>
-<p>In any 2 consecutive weeks: at least <b>1 regular (45 h)</b> + 1 of either kind. Two reduced in a row — international transport only, outside the base country, with double compensation.</p>
-</div></details>
-
-<details><summary>⏱️ The 6-hour rule — break during working time (PL)<span class="chev">›</span></summary><div class="body">
-<p>Independently of the tachograph break (4:30 of driving), the Polish drivers' working time act (implementing Directive 2002/15/EC) requires you to interrupt <b>work</b> — driving <b>plus</b> other work — at the latest after <b>6 consecutive hours</b>:</p>
-<ul><li>daily work up to 9 h → breaks totalling <b>≥30 min</b>;</li>
-<li>work above 9 h → totalling <b>≥45 min</b>;</li>
-<li>may be split into parts of <b>≥15 min</b>, during the 6 h or immediately after.</li></ul>
-<div class="tip"><b>Good news:</b> the 561 break counts here too (art. 27 of the act). The 6 h rule bites mostly at loading docks: 2 h of driving + 4.5 h of yard work = deadline passed, though the 4:30 counter barely moved.</div>
-<p>Availability (⬜) is not work — it doesn't feed the counter, but doesn't reset it either. The rule applies to everyone covered by the act, van drivers included.</p>
-</div></details>
-
-<details><summary>💳 Card & tachograph — step by step<span class="chev">›</span></summary><div class="body">
-<ol>
-<li><b>Start:</b> card into slot 1 (chip up) → the tachograph asks for the start country → confirm. Check whether it offers <b>manual entries</b> since the last card removal.</li>
-<li><b>Driving</b> records itself once the vehicle moves.</li>
-<li><b>Stops:</b> the tachograph often auto-switches to 🔨 (other work) — <b>manually set 🛏 (bed)</b> when resting, because only the bed counts towards the 45-min break and rests!</li>
-<li>Symbols: 🚛 driving • 🔨 other work • ⬜ availability • 🛏 rest.</li>
-<li><b>End:</b> hold the slot button → end country → remove the card. Never while moving.</li>
-<li><b>OUT:</b> mode for driving outside the rules' scope (e.g. exempt transport) — switch on deliberately and off when back in scope.</li>
-</ol>
-<div class="warn2">The most common inspection blunder: parking on 🔨 instead of 🛏 → "no break" and a fine, even though you were standing still.</div>
-</div></details>
-
-<details><summary>✍️ Manual entries — the duty everyone forgets<span class="chev">›</span></summary><div class="body">
-<p>Everything you did <b>between removing and inserting the card</b> (rest, other work, availability) must be entered <b>when inserting the card</b>, before you move. The tachograph will ask ("add entries?" → YES).</p>
-<ul><li>You enter backwards: activity type + from–to, country.</li>
-<li>Made a mistake? Don't panic — finish, then describe the discrepancy on a printout with your signature.</li>
-<li>Missing manual entries are among the most common findings in company audits.</li></ul>
-</div></details>
-
-<details><summary>🧠 Legal planning tricks (what the old hands know)<span class="chev">›</span></summary><div class="body">
-<ul>
-<li><b>15 + 30, never 30 + 15.</b> The second part must be ≥30 min. After a full cycle the 4:30 counter starts from zero.</li>
-<li><b>A break ≥45 min always resets</b> — even after 1 h of driving. Sometimes it pays to "burn" the break early (e.g. waiting for a ramp) to have a clean 4:30 for the route.</li>
-<li><b>Split 3 + 9:</b> doesn't stretch the shift, but saves a day with a long mid-day stop (e.g. a 3 h loading). The 3 h part does <b>not</b> use up the reduced-rest pool.</li>
-<li><b>Reduced daily 9 h = a 15 h work window.</b> You have 3 between weeklies — keep them for days you really need, don't burn them just in case.</li>
-<li><b>10 h extensions (2×/week)</b> — plan them for the longest legs. Dziennik Kierowcy counts what's left for you.</li>
-<li><b>The shift starts with the first work after rest</b> — if you lie in for 2 more hours after an 11 h rest, the deadline counts from when you actually start.</li>
-<li><b>A weekly started Friday evening</b> (45 h) ends Sunday evening — the truck is ready for a night departure.</li>
-<li><b>Attach compensation to the nearest 45 h</b> → one long block and the matter is closed before the deadline.</li>
-<li><b>Watch the 6×24:</b> in a heavy week it forces the weekend more often than the 56 h limit does.</li>
-</ul>
-</div></details>
-
-<details><summary>⛴️ Ferry & train<span class="chev">›</span></summary><div class="body">
-<p>A regular <b>daily (11 h)</b> or <b>weekly (45 h)</b> rest taken on a ferry/train with access to a bunk may be interrupted <b>max twice, ≤1 h in total</b> (boarding/disembarking). Set the ferry symbol on the tachograph before starting the rest.</p>
-</div></details>
-
-<details><summary>🆘 Art. 12 — when life writes the script<span class="chev">›</span></summary><div class="body">
-<p>You may depart from the limits to reach a <b>safe stopping place</b>, provided road safety isn't compromised — and the situation was sudden and unforeseeable (post-accident jam, closed car park).</p>
-<ul><li><b>+1 h</b> over the limits to reach base/home for a <b>weekly</b> rest;</li>
-<li><b>+2 h</b> (preceded by a 30-min break) to reach a <b>regular weekly (45 h)</b>.</li></ul>
-<div class="tip"><b>Always:</b> make a printout, describe the reason and place by hand, sign — <b>immediately after stopping</b>. In this app, add a note to the entry (📝) so the analysis is complete.</div>
-</div></details>
-
-<details><summary>👮 Roadside check — what you show<span class="chev">›</span></summary><div class="body">
-<ul>
-<li>Driver card + tachograph data for the <b>current day and 56 days back</b> (since 31.12.2024 — previously 28).</li>
-<li>Printouts with handwritten notes (failures, art. 12).</li>
-<li>An activity attestation only where the country requires it — in the EU manual entries generally suffice.</li>
-</ul>
-<p>Stay calm and specific: the inspector sees everything in the data — what matters is whether unusual events are <b>described</b>.</p>
-</div></details>
-
-<details><summary>🚐 Vans 2.5–3.5 t — new since 1.07.2026<span class="chev">›</span></summary><div class="body">
-<p>Mobility Package: <b>2.5–3.5 t</b> vehicles in <b>international</b> carriage of goods (and cabotage) fall under the full Reg. 561/2006 + the <b>smart tachograph G2v2</b>. The same limits Dziennik Kierowcy computes.</p>
-<ul><li>Purely domestic van transport — outside 561/2006 (but the Polish working time act still applies).</li>
-<li>Own-account transport ≤ 3.5 t — exempt.</li></ul>
-</div></details>
-
-<details><summary>⚖️ Fines — order of magnitude (PL)<span class="chev">›</span></summary><div class="body">
-<p>The tariff (annex to the road transport act) grades violations PN / BPN / NN. Roughly, for the driver:</p>
-<ul>
-<li>minor overruns (continuous/daily driving up to ~1 h): around <b>PLN 100–200</b>;</li>
-<li>serious (rest cut by several hours, 2 h+ overruns): <b>PLN 300–2000</b>;</li>
-<li>tachograph tampering: <b>PLN 2000 + vehicle detention</b>, up to <b>PLN 10 000</b> for the company plus loss of good repute.</li>
-</ul>
-<p>The company is liable in parallel (cap per roadside check: PLN 12 000). Rates change — treat this as a risk scale, not a price list.</p>
-</div></details>
-
-<details><summary>🛡️ How Dziennik Kierowcy counts<span class="chev">›</span></summary><div class="body">
-<ul>
-<li><b>Gaps between entries = rest.</b> You log activity only; nights and weekends take care of themselves.</li>
-<li>Rests are classified by length: ≥45 min break • ≥3 h split part • ≥9 h reduced daily • ≥11 h daily • ≥24 h reduced weekly • ≥45 h regular weekly.</li>
-<li>Only <b>rest</b> counts towards the 45-min break — other work and availability don't reset the counter (the inspector sees it the same way).</li>
-<li>The <b>6 h work</b> counter (driving + other work): reset by a break ≥30 min or two of ≥15 min; availability neither feeds nor interrupts it. With >9 h of work in a shift, I also watch the total 45 min of breaks.</li>
-<li>Week = calendar (Mon–Sun). Compensations are detected automatically from rest surpluses.</li>
-<li>The app assists and warns, but <b>the driver card is the legal record</b> — keep it in parallel, no exceptions.</li>
-</ul>
-</div></details>`;
-function renderGuide(){ $('guideBody').innerHTML = (LANG==='en'? GUIDE_EN : GUIDE_PL); }
+function renderGuide(){ $('guideBody').innerHTML = GUIDE_PL; }
 
 /* ================= ALARMY PRZERWY (30/15/5/0 min) ================= */
 const ALARM_AT=[30,15,5,0];
@@ -3195,38 +2594,8 @@ const KB=[
  {id:'weekly_when_start',k:[['weekend','piatek','wolne'],['kiedy','zacz']],a:R=>`Tygodniowy zaczęty w piątek wieczorem (45h) kończy się w niedzielę wieczorem — auto gotowe na nocny start. Pilnuj 6×24: kolejny tygodniowy start najpóźniej <b>${R.nextWeeklyLatestStart?fmtDT(R.nextWeeklyLatestStart):'—'}</b>.`},
  {id:'night',k:[['noc','nocn']],a:R=>`Pora nocna (art. 21 ustawy): jeśli choć fragment pracy wypada w 4-godzinnej porze nocnej (u Ciebie <b>${String(R.nightWin[0]).padStart(2,'0')}:00–${String(R.nightWin[1]).padStart(2,'0')}:00</b>, zmienisz w Ustawieniach), praca między dwoma odpoczynkami może trwać max <b>10 h</b>. Dziś: ${R.nightTouched?'<b>dotyczy</b> — masz '+fmtHMs(R.dayWork)+' / 10:00':'nie dotyczy ✓'}. To limit pracy (jazda+inna), niezależny od limitów jazdy z 561/2006.`}
 ];
-const KB_EN={
- left_drive:[['how long','how much','when'],['driv'],['can i','left','still','today','limit']],
- when_break:[['when','what time','how long until'],['break','pause']],
- when_rest:[['when','what time','by when'],['rest','daily','sleep']],
- week_left:[['week','weekly'],['how much','left','limit','driv']],
- ext10:[['10','ten','extend','extension'],['driv','can i','today','hours']],
- red9:[['reduc','9h','nine'],['rest','daily','can i']],
- split39:[['split','3+9','3 and 9']],
- weekly:[['weekly','45h','144','6x24'],['rest','when','latest','how','start','regular','45']],
- comp:[['compensat','return','pay back']],
- work6:[['6h','six','6 hours'],['work']],
- break_rules:[['15','30','45'],['break','order','split']],
- two_red_weekly:[['two','twice','in a row','consecutive'],['reduc'],['weekly']],
- card_start:[['card'],['insert','morning','start','begin','remove','end']],
- manual:[['manual','entry','entries','fill']],
- symbols:[['symbol','icon','mean'],['tachograph','display']],
- out:[['out','out of scope']],
- ferry:[['ferry','train']],
- art12:[['art','12','derogat','emergency','exception']],
- control:[['control','inspect','police','56','roadside']],
- vans:[['van','2.5','3.5','light']],
- border:[['border','country','cross']],
- crew:[['crew','multi','second driver','co-driver']],
- penalties:[['fine','penalt','how much pay']],
- app_how:[['app','tachostroz','tachoguard','how does','gap']],
- weekly_when_start:[['weekend','friday','off'],['when','start']],
- night:[['night']]
-};
-for(const e of KB){const x=KB_EN[e.id];if(x)e.k=e.k.map((g,i)=>g.concat(x[i]||[]));}
-if(KB_EN.left_drive) KB.find(e=>e.id==='left_drive').not.push('week');
+KB.find(e=>e.id==='left_drive').not.push('week');
 KB.find(e=>e.id==='when_rest').not.push('weekly');
-const CHIPS_EN=['How much can I still drive today?','When do I need a break?','By when should I start my rest?','How much is left this week?','Can I reduce to 9h?','Compensation — how much and by when?'];
 function kbMatch(q){
   const n=' '+kbNorm(q)+' ';
   let best=null,bs=0;
@@ -3296,7 +2665,7 @@ async function askAI(q){
     const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{
       'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'
     },body:JSON.stringify({model:model,max_tokens:500,
-      system:'Jesteś ekspertem WYŁĄCZNIE od: rozporządzenia (WE) 561/2006, obsługi tachografów oraz polskiej ustawy o czasie pracy kierowców. Odpowiadasz po '+(LANG==='en'?'angielsku':'polsku')+', zwięźle (max 5 zdań), konkretnie, bez markdown (dozwolone <b>). Jeśli pytanie wykracza poza ten zakres — odmów jednym zdaniem: "Odpowiadam tylko na pytania o tachograf i czas pracy kierowcy." Kontekst bieżących liczników kierowcy: '+ctx,
+      system:'Jesteś ekspertem WYŁĄCZNIE od: rozporządzenia (WE) 561/2006, obsługi tachografów oraz polskiej ustawy o czasie pracy kierowców. Odpowiadasz po '+'polsku'+', zwięźle (max 5 zdań), konkretnie, bez markdown (dozwolone <b>). Jeśli pytanie wykracza poza ten zakres — odmów jednym zdaniem: "Odpowiadam tylko na pytania o tachograf i czas pracy kierowcy." Kontekst bieżących liczników kierowcy: '+ctx,
       messages:[{role:'user',content:q}]})});
     const d=await r.json();
     if(d&&d.content&&d.content.length) return {t:d.content.filter(c=>c.type==='text').map(c=>c.text).join(' '), m:model};
@@ -3327,7 +2696,7 @@ async function ask(q){
 }
 const CHIPS=['Ile mogę dziś jeszcze jechać?','Kiedy muszę zrobić przerwę?','Do której zacząć odpoczynek?','Ile zostało w tygodniu?','Czy mogę skrócić do 9h?','Rekompensata — ile i do kiedy?'];
 function initAsk(){
-  $('chips').innerHTML=(LANG==='en'?CHIPS_EN:CHIPS).map(c=>`<button>${c}</button>`).join('');
+  $('chips').innerHTML=CHIPS.map(c=>`<button>${c}</button>`).join('');
   document.querySelectorAll('#chips button').forEach(b=>b.onclick=()=>ask(b.textContent));
   $('askBtn').onclick=()=>ask($('askIn').value);
   $('askIn').addEventListener('keydown',e=>{if(e.key==='Enter')ask($('askIn').value);});
@@ -3367,8 +2736,6 @@ function renderBackupStats(){
   document.querySelectorAll('#fxSeg button').forEach(b=>b.classList.toggle('sel',b.dataset.fx===dfx));
   const am=(state.settings&&state.settings.aiModelMode)||'top';
   document.querySelectorAll('#aiSeg button').forEach(b=>b.classList.toggle('sel',b.dataset.am===am));
-  const lg=(state.settings&&state.settings.lang)||'pl';
-  document.querySelectorAll('#langSeg button').forEach(b=>b.classList.toggle('sel',b.dataset.lg===lg));
   const nsv=(state.settings&&state.settings.nightStart!=null)?+state.settings.nightStart:0;
   document.querySelectorAll('#nightSeg button').forEach(b=>b.classList.toggle('sel',+b.dataset.ns===nsv));
 }
@@ -3603,21 +2970,13 @@ $('extBtn').onclick=()=>{
   const Rn=analyze(state.events,Date.now(),state.settings);
   toast(Rn.extPending?'Zarezerwowane — 10h aktywne po przerwie 45 min (jak w tachografie)':'Limit dziś: 10h ✓');
 };
-document.querySelectorAll('#langSeg button').forEach(b=>b.onclick=()=>{
-  state.settings.lang=b.dataset.lg; save(); applyLang(); renderBackupStats(); renderAll();
-});
 $('wipeBtn').onclick=()=>{if(confirm(tr('Na pewno usunąć WSZYSTKIE dane? Najpierw zrób eksport!'))&&confirm(tr('Ostatnie ostrzeżenie — operacja nieodwracalna.'))){state.events=[];save();renderAll();toast('Wyczyszczono');}};
 
 document.querySelectorAll('.act[data-act],#mSeg button').forEach(b=>{const t=b.dataset.act||b.dataset.t;if(ICONS[t])b.insertAdjacentHTML('afterbegin',ICONS[t]);});
 }
 
-let ORIG_HTML=null;
-const I18N_SCOPES=['nav','#tab-settings','#tab-backup','#modal','#tab-ask','.acts','#stopBtn','#endDayBtn','#startDayBtn','.dial-sub','.legend','#tab-log .hint-inline','#addBtn','#tab-today .card h3','#alarmOk','#gapBox h2','#gapYes','#gapNo','#a12Box','#art12Btn','#gpsBox'];
 function applyLang(){
-  LANG=(state.settings&&state.settings.lang)||'pl';
-  document.documentElement.lang=LANG;
-  if(!ORIG_HTML){ORIG_HTML={};I18N_SCOPES.forEach(s=>document.querySelectorAll(s).forEach((el,i)=>ORIG_HTML[s+'|'+i]=el.innerHTML));}
-  I18N_SCOPES.forEach(s=>document.querySelectorAll(s).forEach((el,i)=>{const o=ORIG_HTML[s+'|'+i]; if(o!=null) el.innerHTML=(LANG==='en'?tr(o):o);}));
+  document.documentElement.lang='pl';
   bindAll(); initAsk(); renderGuide();
 }
 
